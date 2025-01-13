@@ -1,0 +1,6 @@
+#run this to create your database on your local machine--
+create DATABASE hospitalmanagementsystem;
+
+
+#makesure to change and set your own password in application properties
+#face any problems contact youngtips
