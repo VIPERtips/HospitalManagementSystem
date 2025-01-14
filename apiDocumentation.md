@@ -13,7 +13,7 @@ Registers a new patient.
 - `email` (required, unique)  
 - `address` (required)  
 - `contact` (required)  
-- `dob` (required, format: `yyyy-MM-dd`)  
+- `dateOfBirth` (required, format: `yyyy-MM-dd`)  
 - `gender` (required)  
 - `password` (required)  
 - `confirmPassword` (required)
