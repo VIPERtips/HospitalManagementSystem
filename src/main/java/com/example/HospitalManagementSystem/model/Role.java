@@ -1,6 +1,7 @@
 package com.example.HospitalManagementSystem.model;
 
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -12,13 +13,16 @@ public class Role {
 	@GeneratedValue(strategy= GenerationType.IDENTITY)
 	private int id;
 	private String role;
+	@Column(nullable = false)
+	private boolean isActive;
 	
 	public Role() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public Role(String role) {
+	public Role(String role,boolean isActive) {
 		this.role = role;
+		this.isActive = isActive;
 	}
 
 	public int getId() {
@@ -35,6 +39,14 @@ public class Role {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
 	}
 	
 }

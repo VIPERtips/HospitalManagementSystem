@@ -29,9 +29,52 @@ Respone:
 
 
 
-Login 
+Role 
 Endpoint: api/roles
 Method : GET
 
 Respone: 
   available roles 
+
+
+Endpoint: api/roles
+Method: POST
+    takes :  rolename (required),
+            active   (required, boolean)
+
+
+
+
+Endpoint: api/roles/{roleName}
+Method: GET
+
+Rensponse:
+ 200 ok : Role speciefied
+ 400 Bad request: Role not found
+
+
+
+Endpoint: api/roles/{id}
+Method: PUT
+    takes:  id (required)
+
+Response:
+  200 ok : Role updated
+  404 not found: Role not found
+  400 Bad request: Invalid data
+
+
+Endpoint: api/roles/{id}
+Method: DELETE
+    takes:  id (required)
+
+Response:
+  200 ok : Role deleted
+  404 not found: Role not found
+  400 Bad request: Invalid data
+
+
+
+
+
+
