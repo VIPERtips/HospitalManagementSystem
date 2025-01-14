@@ -2,6 +2,8 @@ package com.example.HospitalManagementSystem.model;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,10 +23,12 @@ public class UserDetails {
 	private String email;
 	private String address;
 	private String contact;
+	@Column(columnDefinition = "DATE")
 	private Date dateOfBirth;
 	private String gender;
 	@OneToOne
 	@JoinColumn(name = "user_id")
+	@JsonIgnore
 	private User user;
 	public UserDetails() {
 		// TODO Auto-generated constructor stub
