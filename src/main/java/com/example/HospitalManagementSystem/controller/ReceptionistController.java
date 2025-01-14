@@ -65,5 +65,16 @@ public class ReceptionistController {
         }
     }
     
+    @PostMapping("/patient/register")
+    public ResponseEntity<String> registerPatient(@RequestBody SignUpDto signUpDto) {
+        try {
+            
+            receptionistService.registerPatientForReceptionist(signUpDto);
+            return ResponseEntity.ok("Patient registration successful!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+    
     
 }
