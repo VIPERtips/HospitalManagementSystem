@@ -35,8 +35,7 @@ public class AuthenticationController {
 	@Autowired
 	private UserService userService;
 	
-	@Autowired
-	private RoleService roleService;
+	
 	@PostMapping("/sign-up")
 	public ResponseEntity<String> signUp(@RequestBody SignUpDto signUpDto){
 		try {
@@ -61,8 +60,5 @@ public class AuthenticationController {
 		
 	}
 	
-	@GetMapping("/roles")
-	public ResponseEntity<List<Role>> getRoles(){
-		return ResponseEntity.ok(roleService.findAllRoles());
-	}
+	
 }

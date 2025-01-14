@@ -23,13 +23,15 @@ public class HospitalRoles implements CommandLineRunner{
 				"Doctor",
 				"Patient",
 				"Pharmacist",
-				"Admin"
+				"Admin",
+				"Receptionist"
 				
 				);
 		roles.forEach(role->{
 			if(!rolerepository.existsByRole(role)) {
 				Role roleType = new Role();
 				roleType.setRole(role);
+				roleType.setActive(true);
 				rolerepository.save(roleType);
 			}
 			
