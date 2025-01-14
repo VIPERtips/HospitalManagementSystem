@@ -50,7 +50,7 @@ public class AuthenticationService {
 			String toEmail = userDetails.getEmail();
 	        String subject = "Registration Email From I-Hub Hospital";
 	        String body = String.format("Dear %s,\n\nWelcome to I-Hub Hospital! Here are your login credentials:\n\nUsername: %s\nPassword: %s\n\nPlease keep this information safe.\n\nBest regards,\nI-Hub Hospital Team",
-	                userDetails.getFirstname(), user.getUsername(), signUpDto.getPassword()); 
+	                userDetails.getFirstname(), user.getUsername(), user.getPassword()); 
 
 	        emailSender.sendEmail(toEmail, subject, body);
 			
