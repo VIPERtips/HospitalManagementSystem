@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.example.HospitalManagementSystem.model.ConsultationFee;
+import com.example.HospitalManagementSystem.model.Patient;
 import com.example.HospitalManagementSystem.model.SignUpDto;
 import com.example.HospitalManagementSystem.model.UserDetails;
 import com.example.HospitalManagementSystem.service.ReceptionistService;
@@ -71,6 +73,27 @@ public class ReceptionistController {
             
             receptionistService.registerPatientForReceptionist(signUpDto);
             return ResponseEntity.ok("Patient registration successful!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+    @GetMapping("/patient/{id}")
+    public ResponseEntity<Patient> getPatientById(@PathVariable int id) {
+        try {
+            Patient patient = receptionistService.findPatientById(id);
+            return ResponseEntity.ok(patient);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    
+    @PostMapping("/patient/{id}/charge-consultation-fee")
+    public ResponseEntity<String> chargeConsultationFee(@PathVariable int id, @RequestParam double feeAmount) {
+        try {
+            Patient patient = receptionistService.findPatientById(id);
+            ConsultationFee consultationFee = receptionistService.chargeConsultationFee(patient, feeAmount);
+            return ResponseEntity.ok("Consultation fee charged: " + consultationFee.getFee());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }

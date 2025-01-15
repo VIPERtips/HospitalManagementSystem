@@ -10,11 +10,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.HospitalManagementSystem.config.SpringSecurityUser;
+import com.example.HospitalManagementSystem.model.ConsultationFee;
 import com.example.HospitalManagementSystem.model.Patient;
 import com.example.HospitalManagementSystem.model.Role;
 import com.example.HospitalManagementSystem.model.SignUpDto;
 import com.example.HospitalManagementSystem.model.User;
 import com.example.HospitalManagementSystem.model.UserDetails;
+import com.example.HospitalManagementSystem.repository.ConsultationFeeRepository;
 import com.example.HospitalManagementSystem.repository.PatientRepository;
 import com.example.HospitalManagementSystem.repository.ReceptionistRepository;
 import com.example.HospitalManagementSystem.repository.RoleRepository;
@@ -49,6 +51,10 @@ public class ReceptionistService {
     
     @Autowired
     private UserDetailsRepository userDetailsRepository;
+    
+    
+    @Autowired
+    private ConsultationFeeRepository consultationFeeRepository;
 
     
     public User createReceptionist(SignUpDto signUpDto) {
@@ -147,12 +153,12 @@ public class ReceptionistService {
             userDetails = userDetailsRepository.save(userDetails);
 
             
-            Patient patient = new Patient(userDetails, receptionist);
+            Patient patient = new Patient(userDetails,receptionist);
 
-            // Save Patient
+            
             patientRepository.save(patient);
 
-            // Link the Patient to the User object
+           
             user.setUserDetails(userDetails);
             userRepository.save(user);
 
@@ -168,6 +174,20 @@ public class ReceptionistService {
         } else {
             throw new RuntimeException("Sign up failed: Passwords do not match!");
         }
+    }
+    
+   
+    public ConsultationFee chargeConsultationFee(Patient patient, double feeAmount) {
+        
+        ConsultationFee consultationFee = new ConsultationFee(patient, feeAmount);
+
+        
+        return consultationFeeRepository.save(consultationFee);
+    }
+
+    
+    public Patient findPatientById(int id) {
+        return patientRepository.findById(id).orElseThrow(() -> new RuntimeException("Patient not found"));
     }
 
 }

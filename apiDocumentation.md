@@ -165,5 +165,35 @@ Registers a new patient by a receptionist.
 - `400 Bad Request`: `"Error: Email already exists. Please use a different email address."`  
 - `401 Unauthorized`: `"No authenticated user found!"`
 
+
+
+## **Find Patient**  
+**Endpoint**: `/api/receptionists/patients/{id}`  
+**Method**: `GET`
+
+Fetches details of a specified patient.
+
+**Response**:  
+- `200 OK`: A response with the patient details.
+- `400 Bad Request`: `"Patient not found"`
+
+---
+
+## **Charge Consultation Fee**  
+**Endpoint**: `/api/receptionists/patients/{id}/charge-consultation-fee`  
+**Method**: `POST`
+
+Charges the consultation fee to a patient.
+
+**Takes**:  
+- `id` (required) - Patient ID  
+- `feeAmount` (required) - The amount to be charged for the consultation.
+
+**Response**:  
+- `200 OK`: `"Consultation fee charged: <feeAmount>"`  
+- `400 Bad Request`: `"Error: Patient not found"`  
+- `400 Bad Request`: `"Error: Unable to charge consultation fee"`
+
+
 --- 
 ---
