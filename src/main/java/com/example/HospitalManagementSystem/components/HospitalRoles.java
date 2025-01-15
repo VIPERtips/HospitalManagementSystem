@@ -24,7 +24,8 @@ public class HospitalRoles implements CommandLineRunner{
 				"Patient",
 				"Pharmacist",
 				"Admin",
-				"Receptionist"
+				"Receptionist",
+				"Nurse" 
 				
 				);
 		roles.forEach(role->{

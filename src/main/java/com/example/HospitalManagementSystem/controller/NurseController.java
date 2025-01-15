@@ -19,12 +19,12 @@ public class NurseController {
     private NurseService nurseService;
 
     @PostMapping
-    public ResponseEntity<Nurse> createNurse(@RequestBody SignUpDto signUpDto) {
+    public ResponseEntity<Object> createNurse(@RequestBody SignUpDto signUpDto) {
     	try {
             Nurse createdNurse = nurseService.createNurse(signUpDto);
             return ResponseEntity.ok(createdNurse);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 
@@ -44,11 +44,11 @@ public class NurseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Nurse> updateNurse(@PathVariable int id, @RequestBody Nurse updatedNurse) {
+    public ResponseEntity<Object> updateNurse(@PathVariable int id, @RequestBody Nurse updatedNurse) {
         try {
             return ResponseEntity.ok(nurseService.updateNurse(id, updatedNurse));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(null);
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
 

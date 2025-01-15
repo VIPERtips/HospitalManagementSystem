@@ -2,6 +2,7 @@ package com.example.HospitalManagementSystem.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -67,8 +68,12 @@ public class NurseService {
     }
 
     public List<Nurse> getAllNurses() {
-        return nurseRepository.findAll();
+        Role nurseRole = roleRepository.findByRole("NURSE");
+        return nurseRepository.findAll().stream()
+                .filter(nurse -> nurse.getUser().getRole().equals(nurseRole))
+                .collect(Collectors.toList());
     }
+
 
     public Nurse getNurseById(int id) {
         Optional<Nurse> optional = nurseRepository.findById(id);
