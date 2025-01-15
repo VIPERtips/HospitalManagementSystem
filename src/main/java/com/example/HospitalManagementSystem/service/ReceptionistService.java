@@ -18,10 +18,17 @@ import com.example.HospitalManagementSystem.model.UserDetails;
 import com.example.HospitalManagementSystem.repository.PatientRepository;
 import com.example.HospitalManagementSystem.repository.ReceptionistRepository;
 import com.example.HospitalManagementSystem.repository.RoleRepository;
+import com.example.HospitalManagementSystem.repository.UserDetailsRepository;
 import com.example.HospitalManagementSystem.repository.UserRepository;
+
+import jakarta.servlet.http.HttpSession;
+
 
 @Service
 public class ReceptionistService {
+	@Autowired
+	private HttpSession session;
+	
 	@Autowired
     private EmailSender emailSender;
     @Autowired
@@ -39,6 +46,9 @@ public class ReceptionistService {
     
     @Autowired
     private PatientRepository patientRepository;
+    
+    @Autowired
+    private UserDetailsRepository userDetailsRepository;
 
     
     public User createReceptionist(SignUpDto signUpDto) {
@@ -99,76 +109,64 @@ public class ReceptionistService {
     
    
     public User registerPatientForReceptionist(SignUpDto signUpDto) {
-        // Retrieve the current authenticated user
-        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        String username = null;
+        
+        
+        String username = (String) session.getAttribute("username");
 
-        if (principal instanceof UserDetails) {
-            username = ((UserDetails) principal).getEmail();  
-        } else if (principal instanceof String) {
-            username = (String) principal; 
-        }
-
+       
         if (username == null) {
             throw new RuntimeException("No authenticated user found!");
         }
 
-       
         User receptionist = userRepository.findByUsername(username);
-
         Role patientRole = roleRepository.findByRole("Patient");
 
-        if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
-            
-            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole);
+       
+        if (userRepository.existsByUsername(signUpDto.getEmail())) {
+            throw new RuntimeException("Email already exists. Please use a different email address.");
+        }
 
-            
+        if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
+           
+            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole);
             user = userRepository.save(user);
 
             
-            UserDetails patientUserDetails = new UserDetails(
-                    signUpDto.getFirstname(),
-                    signUpDto.getLastname(),
-                    signUpDto.getEmail(),
-                    signUpDto.getAddress(),
-                    signUpDto.getContact(),
-                    signUpDto.getDateOfBirth(),
-                    signUpDto.getGender(),
-                    user
+            UserDetails userDetails = new UserDetails(
+                signUpDto.getFirstname(),
+                signUpDto.getLastname(),
+                signUpDto.getEmail(),
+                signUpDto.getAddress(),
+                signUpDto.getContact(),
+                signUpDto.getDateOfBirth(),
+                signUpDto.getGender(),
+                user
             );
 
-            // Save the patient user details
-            patientRepository.save(patientUserDetails);
+            
+            userDetails = userDetailsRepository.save(userDetails);
 
-            // Step 4: Link UserDetails to User and save again
-            user.setUserDetails(patientUserDetails);
-            userRepository.save(user);
+            
+            Patient patient = new Patient(userDetails, receptionist);
 
-            // Step 5: Create the Patient entity and link the receptionist as the creator
-            Patient patient = new Patient(
-                    signUpDto.getFirstname(),
-                    signUpDto.getLastname(),
-                    signUpDto.getEmail(),
-                    signUpDto.getAddress(),
-                    signUpDto.getContact(),
-                    signUpDto.getDateOfBirth(),
-                    signUpDto.getGender(),
-                    receptionist // Set the receptionist who created this patient
-            );
+            // Save Patient
             patientRepository.save(patient);
 
-            // Step 6: Send the registration email to the patient
-            String toEmail = patientUserDetails.getEmail();
+            // Link the Patient to the User object
+            user.setUserDetails(userDetails);
+            userRepository.save(user);
+
+            // Send registration email
+            String toEmail = userDetails.getEmail();
             String subject = "Registration Email From I-Hub Hospital";
             String body = String.format("Dear %s,\n\nWelcome to I-Hub Hospital! Here are your login credentials:\n\nUsername: %s\nPassword: %s\n\nPlease keep this information safe.\n\nBest regards,\nI-Hub Hospital Team",
-                    patientUserDetails.getFirstname(), user.getUsername(), signUpDto.getPassword());
+                    userDetails.getFirstname(), user.getUsername(), signUpDto.getPassword());
 
             emailSender.sendEmail(toEmail, subject, body);
 
-            // Return the created user
             return user;
         } else {
-            throw new RuntimeException("Sign up failed: check your input fields!");
+            throw new RuntimeException("Sign up failed: Passwords do not match!");
         }
     }
 

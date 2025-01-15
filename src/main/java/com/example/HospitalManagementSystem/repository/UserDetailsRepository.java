@@ -6,4 +6,6 @@ import com.example.HospitalManagementSystem.model.UserDetails;
 
 public interface UserDetailsRepository extends JpaRepository<UserDetails, Integer> {
 
+	boolean existsByEmail(String email);
+
 }

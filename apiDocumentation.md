@@ -141,4 +141,29 @@ Fetches details of a specified receptionist.
 - `200 OK`: A detailed response with the receptionist details.  
 - `404 Not Found`: `"Receptionist not found"`
 
+
+## **Register Patient**  
+**Endpoint**: `/api/receptionists/patient/register`  
+**Method**: `POST`
+
+Registers a new patient by a receptionist.
+
+**Takes**:  
+- `firstname` (required)  
+- `lastname` (required)  
+- `email` (required, unique)  
+- `address` (required)  
+- `contact` (required)  
+- `dateOfBirth` (required, format: `yyyy-MM-dd`)  
+- `gender` (required)  
+- `password` (required)  
+- `confirmPassword` (required)
+
+**Response**:  
+- `200 OK`: `"Patient registration successful!"`  
+- `400 Bad Request`: `"Error: Passwords do not match!"`  
+- `400 Bad Request`: `"Error: Email already exists. Please use a different email address."`  
+- `401 Unauthorized`: `"No authenticated user found!"`
+
+--- 
 ---

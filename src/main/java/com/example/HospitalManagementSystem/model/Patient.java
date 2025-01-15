@@ -1,12 +1,24 @@
 package com.example.HospitalManagementSystem.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Table;
 
 @Entity
-public class Patient extends UserDetails {
+@Table(name = "patients")
+public class Patient {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
     
+    @ManyToOne
+    @JoinColumn(name = "userdetails_id")
+    private UserDetails userDetails;
+
     @ManyToOne
     @JoinColumn(name = "created_by_id")
     private User createdBy;
@@ -15,10 +27,17 @@ public class Patient extends UserDetails {
         // Default constructor
     }
 
-    
-    public Patient(String firstname, String lastname, String email, String address, String contact, java.sql.Date dateOfBirth, String gender, User createdBy) {
-        super(firstname, lastname, email, address, contact, dateOfBirth, gender, createdBy);
+    public Patient(UserDetails userDetails, User createdBy) {
+        this.userDetails = userDetails;
         this.createdBy = createdBy;
+    }
+
+    public UserDetails getUserDetails() {
+        return userDetails;
+    }
+
+    public void setUserDetails(UserDetails userDetails) {
+        this.userDetails = userDetails;
     }
 
     public User getCreatedBy() {

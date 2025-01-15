@@ -10,6 +10,7 @@ import com.example.HospitalManagementSystem.model.User;
 import com.example.HospitalManagementSystem.model.UserDetails;
 import com.example.HospitalManagementSystem.repository.PatientRepository;
 import com.example.HospitalManagementSystem.repository.RoleRepository;
+import com.example.HospitalManagementSystem.repository.UserDetailsRepository;
 import com.example.HospitalManagementSystem.repository.UserRepository;
 
 @Service
@@ -24,7 +25,7 @@ public class AuthenticationService {
 	private UserRepository userRepository;
 
 	@Autowired
-	private PatientRepository patientRepository;
+	private UserDetailsRepository userDetailsRepository;
 
 	@Autowired
 	private RoleRepository roleRepository;
@@ -42,7 +43,7 @@ public class AuthenticationService {
 			UserDetails userDetails = new UserDetails(signUpDto.getFirstname(), signUpDto.getLastname(),
 					signUpDto.getEmail(), signUpDto.getAddress(), signUpDto.getContact(), signUpDto.getDateOfBirth(),
 					signUpDto.getGender(), user);
-			patientRepository.save(userDetails);
+			userDetailsRepository.save(userDetails);
 			user.setUserDetails(userDetails);
 			//save user again
 			userRepository.save(user);

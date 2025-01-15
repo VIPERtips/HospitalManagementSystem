@@ -47,21 +47,21 @@ public class AuthenticationController {
 		}
 	}
 	
-	/*@PostMapping("/login")
+	@PostMapping("/login")
 	public ResponseEntity<String> login(@RequestBody User user,HttpSession session){
 		String username = user.getUsername();
 		String password = user.getPassword();
 		User existingUser = userService.findByUsername(username);
 		if(existingUser!=null && passwordEncoder.matches(password, existingUser.getPassword())) {
-			session.setAttribute(username, existingUser);
+			session.setAttribute("username", username);
 			return ResponseEntity.ok(("Login successfull"));
 		}else {
 			 return ResponseEntity.badRequest().body("Invalid credentials");
 		}
 		
-	}*/
+	}
 	
-	 @PostMapping("/login")
+	/* @PostMapping("/login")
 	    public ResponseEntity<String> login(@RequestBody User user, HttpSession session) {
 	        String username = user.getUsername();
 	        String password = user.getPassword();
@@ -83,6 +83,6 @@ public class AuthenticationController {
 	            return ResponseEntity.badRequest().body("Invalid credentials");
 	        }
 	    }
-	
+	*/
 
 }
