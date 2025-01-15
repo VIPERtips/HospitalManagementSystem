@@ -41,4 +41,3 @@ public class HospitalRoles implements CommandLineRunner{
 	}
 
 }
-

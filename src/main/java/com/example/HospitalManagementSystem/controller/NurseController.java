@@ -61,4 +61,4 @@ public class NurseController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-}
+                }
