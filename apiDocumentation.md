@@ -197,3 +197,91 @@ Charges the consultation fee to a patient.
 
 --- 
 ---
+
+## **Nurse**
+
+### **Create Nurse**  
+**Endpoint**: `/api/nurses`  
+**Method**: `POST`
+
+Creates a new nurse.
+
+**Takes**:  
+- `firstname` (required)  
+- `lastname` (required)  
+- `email` (required, unique)  
+- `address` (required)  
+- `contact` (required)  
+- `dob` (required, format: `yyyy-MM-dd`)  
+- `gender` (required)  
+- `password` (required)  
+- `role` (required, e.g., "Nurse")  
+
+**Response**:  
+- `201 Created`: `"Nurse created successfully"`  
+- `400 Bad Request`: `"Failed to create nurse, check input fields"`
+
+---
+
+### **Get All Nurses**  
+**Endpoint**: `/api/nurses`  
+**Method**: `GET`
+
+Fetches a list of all nurses.
+
+**Response**:  
+- `200 OK`: A list of all nurses.
+
+---
+
+### **Get Nurse by ID**  
+**Endpoint**: `/api/nurses/{id}`  
+**Method**: `GET`
+
+Fetches details of a specified nurse.
+
+**Response**:  
+- `200 OK`: A detailed response with the nurse details.  
+- `404 Not Found`: `"Nurse not found"`
+
+---
+
+### **Update Nurse**  
+**Endpoint**: `/api/nurses/{id}`  
+**Method**: `PUT`
+
+Updates an existing nurse.
+
+**Takes**:  
+- `id` (required, path parameter)  
+- `firstname` (optional)  
+- `lastname` (optional)  
+- `email` (optional)  
+- `address` (optional)  
+- `contact` (optional)  
+- `dob` (optional, format: `yyyy-MM-dd`)  
+- `gender` (optional)  
+- `password` (optional)  
+
+**Response**:  
+- `200 OK`: `"Nurse updated successfully"`  
+- `404 Not Found`: `"Nurse not found"`  
+- `400 Bad Request`: `"Invalid data"`
+
+---
+
+### **Delete Nurse**  
+**Endpoint**: `/api/nurses/{id}`  
+**Method**: `DELETE`
+
+Deletes an existing nurse.
+
+**Takes**:  
+- `id` (required, path parameter)
+
+**Response**:  
+- `200 OK`: `"Nurse deleted successfully"`  
+- `404 Not Found`: `"Nurse not found"`  
+- `400 Bad Request`: `"Invalid data"`
+
+---
