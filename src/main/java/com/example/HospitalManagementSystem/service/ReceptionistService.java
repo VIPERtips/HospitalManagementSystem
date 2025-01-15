@@ -3,6 +3,7 @@ package com.example.HospitalManagementSystem.service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -83,8 +84,12 @@ public class ReceptionistService {
 
     
     public List<UserDetails> getAllReceptionists() {
-        return receptionistRepository.findAll();
+        Role receptionistRole = roleRepository.findByRole("RECEPTIONIST");
+        return userDetailsRepository.findAll().stream()
+                .filter(userDetails -> userDetails.getUser().getRole().equals(receptionistRole))
+                .collect(Collectors.toList());
     }
+
 
     
     public UserDetails getReceptionistById(int id) {

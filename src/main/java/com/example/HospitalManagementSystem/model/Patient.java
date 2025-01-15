@@ -11,6 +11,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
+import jakarta.persistence.Transient;
 
 @Entity
 @Table(name = "patients")
@@ -25,6 +26,7 @@ public class Patient {
     
 
     @ManyToOne
+    @Transient
     private Receptionist receptionist;
 
     @OneToMany(mappedBy = "patient", cascade = CascadeType.ALL)

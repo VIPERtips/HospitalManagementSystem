@@ -24,7 +24,11 @@ public class NurseController {
             Nurse createdNurse = nurseService.createNurse(signUpDto);
             return ResponseEntity.ok(createdNurse);
         } catch (Exception e) {
+<<<<<<< HEAD
         	return ResponseEntity.badRequest().body(e.getMessage());
+=======
+            return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> c7e979c3827dfc89a82162f3e055cf1c7b9b1164
         }
     }
 
@@ -48,7 +52,11 @@ public class NurseController {
         try {
             return ResponseEntity.ok(nurseService.updateNurse(id, updatedNurse));
         } catch (Exception e) {
+<<<<<<< HEAD
         	return ResponseEntity.badRequest().body(e.getMessage());
+=======
+            return ResponseEntity.badRequest().body(e.getMessage());
+>>>>>>> c7e979c3827dfc89a82162f3e055cf1c7b9b1164
         }
     }
 
