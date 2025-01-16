@@ -3,6 +3,7 @@ package com.example.HospitalManagementSystem.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -98,17 +99,17 @@ public class ReceptionistController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-    
     @PostMapping("/patient/{id}/send-to-nurse")
-    public ResponseEntity<String> sendPatientDetailsToNurse(@PathVariable int id) {
+    public ResponseEntity<String> sendPatientDetailsToNurse(@PathVariable int id, @RequestBody int nurseIdentifier) {
         try {
-            receptionistService.sendPatientDetailsToNurse(id);
+            receptionistService.sendPatientDetailsToNurse(id, nurseIdentifier);
             return ResponseEntity.ok("Patient details sent to the nurse.");
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error: " + e.getMessage());
         }
     }
 
-    
     
 }

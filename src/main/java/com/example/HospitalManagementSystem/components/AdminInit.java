@@ -10,6 +10,7 @@ import com.example.HospitalManagementSystem.model.User;
 import com.example.HospitalManagementSystem.repository.RoleRepository;
 import com.example.HospitalManagementSystem.repository.UserRepository;
 import com.example.HospitalManagementSystem.service.EmailSender;
+import com.example.HospitalManagementSystem.service.RoleService;
 
 @Component
 public class AdminInit implements CommandLineRunner {
@@ -19,6 +20,9 @@ public class AdminInit implements CommandLineRunner {
 
     @Autowired
     private RoleRepository roleRepository;
+    
+    @Autowired
+    private RoleService roleService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -36,8 +40,11 @@ public class AdminInit implements CommandLineRunner {
 
         // Find the admin role
         Role adminRole = roleRepository.findByRole("ADMIN");
+        Role role = new Role("Admin",true);
+        
         if (adminRole == null) {
-            throw new RuntimeException("Admin role not found. Please ensure the role exists in the database.");
+            roleService.createRole(role);
+            roleRepository.save(role);
         }
 
         // Create a new admin user

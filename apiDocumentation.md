@@ -213,6 +213,18 @@ Charges the consultation fee to a patient.
 - `400 Bad Request`: `"Error: Unable to charge consultation fee"`
 
 
+## **Send Patient Details to Nurse**  
+**Endpoint**: `/patient/{id}/send-to-nurse`  
+**Method**: `POST`
+
+Sends patient details to the nurse by the nurse's ID.
+
+**Takes**:  
+- `id` (required) - Patient ID (integer)  
+- `nurseIdentifier` (required) - Nurse ID (integer)
+
+**Request Body**
+
 --- 
 ---
 
@@ -303,3 +315,7 @@ Deletes an existing nurse.
 - `400 Bad Request`: `"Invalid data"`
 
 ---
+
+
+
+

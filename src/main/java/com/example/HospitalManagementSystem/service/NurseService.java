@@ -10,11 +10,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.HospitalManagementSystem.model.Nurse;
+import com.example.HospitalManagementSystem.model.Patient;
+import com.example.HospitalManagementSystem.model.PatientVitals;
 import com.example.HospitalManagementSystem.model.Role;
 import com.example.HospitalManagementSystem.model.SignUpDto;
 import com.example.HospitalManagementSystem.model.User;
+import com.example.HospitalManagementSystem.model.UserDetails;
 import com.example.HospitalManagementSystem.repository.NurseRepository;
+import com.example.HospitalManagementSystem.repository.PatientRepository;
+import com.example.HospitalManagementSystem.repository.PatientVitalsRepository;
 import com.example.HospitalManagementSystem.repository.RoleRepository;
+import com.example.HospitalManagementSystem.repository.UserDetailsRepository;
 import com.example.HospitalManagementSystem.repository.UserRepository;
 
 @Service
@@ -31,48 +37,59 @@ public class NurseService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+    
+    @Autowired
+    private PatientRepository patientRepository;
+    
+    @Autowired
+     private PatientVitalsRepository patientVitalsRepository;
+    
+    @Autowired
+    private UserDetailsRepository userDetailsRepository;
 
     @Transactional
-    public Nurse createNurse(SignUpDto signUpDto) {
+    public User createNurse(SignUpDto signUpDto) {
         Role nurseRole = roleRepository.findByRole("NURSE");
         if (nurseRole == null) {
             throw new RuntimeException("Role NURSE not found!");
         }
 
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
-            // Create user
+            
             User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, nurseRole);
             user = userRepository.save(user);
 
-            // Create nurse details
-            Nurse nurseDetails = new Nurse();
-            nurseDetails.setFirstname(signUpDto.getFirstname());
-            nurseDetails.setLastname(signUpDto.getLastname());
-            nurseDetails.setEmail(signUpDto.getEmail());
-            nurseDetails.setAddress(signUpDto.getAddress());
-            nurseDetails.setContact(signUpDto.getContact());
-            nurseDetails.setDateOfBirth(signUpDto.getDateOfBirth());
-            nurseDetails.setGender(signUpDto.getGender());
-            nurseDetails.setUser(user);
+            
+            UserDetails userDetails = new UserDetails(signUpDto.getFirstname(), signUpDto.getLastname(),
+                    signUpDto.getEmail(), signUpDto.getAddress(), signUpDto.getContact(),
+                    signUpDto.getDateOfBirth(), signUpDto.getGender(), user);
 
-            nurseRepository.save(nurseDetails);
-            user.setUserDetails(nurseDetails);
+            userDetailsRepository.save(userDetails);
+            user.setUserDetails(userDetails); 
 
-            // Save user again to link userDetails
+            
             userRepository.save(user);
 
-            return nurseDetails; // Return the Nurse object
+            
+            Nurse nurse = new Nurse(userDetails);
+            nurseRepository.save(nurse);
+
+            return user; 
         } else {
             throw new RuntimeException("Passwords do not match!");
         }
     }
 
-    public List<Nurse> getAllNurses() {
+    public List<UserDetails> getAllNurses() {
+        
         Role nurseRole = roleRepository.findByRole("NURSE");
-        return nurseRepository.findAll().stream()
-                .filter(nurse -> nurse.getUser().getRole().equals(nurseRole))
+        
+       
+        return userDetailsRepository.findAll().stream()
+                .filter(nurse -> nurse.getUser().getRole().equals(nurseRole)) 
                 .collect(Collectors.toList());
     }
+
 
 
     public Nurse getNurseById(int id) {
@@ -80,22 +97,56 @@ public class NurseService {
         return optional.orElseThrow(() -> new RuntimeException("Nurse not found with ID: " + id));
     }
 
-    public Nurse updateNurse(int id, Nurse updatedDetails) {
-        Nurse existingDetails = getNurseById(id);
+    public Nurse updateNurse(int id, SignUpDto updatedDetails) {
+        
+        Nurse existingNurse = nurseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Nurse not found with ID: " + id));
 
-        existingDetails.setFirstname(updatedDetails.getFirstname());
-        existingDetails.setLastname(updatedDetails.getLastname());
-        existingDetails.setEmail(updatedDetails.getEmail());
-        existingDetails.setAddress(updatedDetails.getAddress());
-        existingDetails.setContact(updatedDetails.getContact());
-        existingDetails.setDateOfBirth(updatedDetails.getDateOfBirth());
-        existingDetails.setGender(updatedDetails.getGender());
+       
+        UserDetails existingUserDetails = existingNurse.getUserDetails();
 
-        return nurseRepository.save(existingDetails);
+        
+        existingUserDetails.setFirstname(updatedDetails.getFirstname());
+        existingUserDetails.setLastname(updatedDetails.getLastname());
+        existingUserDetails.setEmail(updatedDetails.getEmail());
+        existingUserDetails.setAddress(updatedDetails.getAddress());
+        existingUserDetails.setContact(updatedDetails.getContact());
+        existingUserDetails.setDateOfBirth(updatedDetails.getDateOfBirth());
+        existingUserDetails.setGender(updatedDetails.getGender());
+
+        
+        userDetailsRepository.save(existingUserDetails);
+
+        
+        existingNurse.setUserDetails(existingUserDetails);
+
+        
+        nurseRepository.save(existingNurse);
+
+        return existingNurse; 
     }
 
     public void deleteNurse(int id) {
         Nurse nurse = getNurseById(id);
         nurseRepository.delete(nurse);
+    }
+    
+    
+    public void recordPatientVitals(int patientId, PatientVitals vitals) {
+       
+        Patient patient = patientRepository.findById(patientId)
+                .orElseThrow(() -> new RuntimeException("Patient not found"));
+
+       
+        vitals.setPatient(patient);
+        patientVitalsRepository.save(vitals);
+    }
+
+    public List<PatientVitals> getPatientVitals(int patientId) {
+        
+        patientRepository.findById(patientId).orElseThrow(() -> new RuntimeException("Patient not found"));
+
+        
+        return patientVitalsRepository.findByPatientId(patientId);
     }
 }

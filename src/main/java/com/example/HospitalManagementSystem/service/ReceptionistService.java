@@ -12,12 +12,15 @@ import org.springframework.stereotype.Service;
 
 import com.example.HospitalManagementSystem.config.SpringSecurityUser;
 import com.example.HospitalManagementSystem.model.ConsultationFee;
+import com.example.HospitalManagementSystem.model.Nurse;
 import com.example.HospitalManagementSystem.model.Patient;
+import com.example.HospitalManagementSystem.model.Receptionist;
 import com.example.HospitalManagementSystem.model.Role;
 import com.example.HospitalManagementSystem.model.SignUpDto;
 import com.example.HospitalManagementSystem.model.User;
 import com.example.HospitalManagementSystem.model.UserDetails;
 import com.example.HospitalManagementSystem.repository.ConsultationFeeRepository;
+import com.example.HospitalManagementSystem.repository.NurseRepository;
 import com.example.HospitalManagementSystem.repository.PatientRepository;
 import com.example.HospitalManagementSystem.repository.ReceptionistRepository;
 import com.example.HospitalManagementSystem.repository.RoleRepository;
@@ -58,6 +61,9 @@ public class ReceptionistService {
     private ConsultationFeeRepository consultationFeeRepository;
 
     
+    @Autowired
+    private NurseRepository nurseRepository;
+    
     public User createReceptionist(SignUpDto signUpDto) {
         Role receptionistRole = roleRepository.findByRole("RECEPTIONIST");
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
@@ -70,11 +76,16 @@ public class ReceptionistService {
             UserDetails userDetails = new UserDetails(signUpDto.getFirstname(), signUpDto.getLastname(),
                     signUpDto.getEmail(), signUpDto.getAddress(), signUpDto.getContact(), signUpDto.getDateOfBirth(),
                     signUpDto.getGender(), user);
-            receptionistRepository.save(userDetails);
+            userDetailsRepository.save(userDetails);
             user.setUserDetails(userDetails);
 
             // Save user again to link userDetails
             userRepository.save(user);
+            
+            // Create and link Receptionist to UserDetails
+            Receptionist receptionist = new Receptionist(userDetails); 
+            receptionistRepository.save(receptionist); 
+
 
             return user;
         } else {
@@ -92,14 +103,18 @@ public class ReceptionistService {
 
 
     
-    public UserDetails getReceptionistById(int id) {
-        Optional<UserDetails> optional = receptionistRepository.findById(id);
+    public Receptionist getReceptionistById(int id) {
+        Optional<Receptionist> optional = receptionistRepository.findById(id);
         return optional.orElseThrow(() -> new RuntimeException("Receptionist not found with ID: " + id));
     }
 
     
-    public UserDetails updateReceptionist(int id, UserDetails updatedDetails) {
-        UserDetails existingDetails = getReceptionistById(id);
+    public Receptionist updateReceptionist(int id, UserDetails updatedDetails) {
+        
+        Receptionist existingReceptionist = getReceptionistById(id);
+
+       
+        UserDetails existingDetails = existingReceptionist.getUserDetails();
 
         existingDetails.setFirstname(updatedDetails.getFirstname());
         existingDetails.setLastname(updatedDetails.getLastname());
@@ -109,12 +124,20 @@ public class ReceptionistService {
         existingDetails.setDateOfBirth(updatedDetails.getDateOfBirth());
         existingDetails.setGender(updatedDetails.getGender());
 
-        return receptionistRepository.save(existingDetails);
+        // Save the updated UserDetails entity
+        userDetailsRepository.save(existingDetails);
+
+        
+        receptionistRepository.save(existingReceptionist);
+
+        // Return the updated Receptionist object
+        return existingReceptionist;
     }
+
 
    
     public void deleteReceptionist(int id) {
-        UserDetails receptionist = getReceptionistById(id);
+        Receptionist receptionist = getReceptionistById(id);
         receptionistRepository.delete(receptionist);
     }
     
@@ -181,14 +204,7 @@ public class ReceptionistService {
         }
     }
     
-   /*
-    public ConsultationFee chargeConsultationFee(Patient patient, double feeAmount) {
-        
-        ConsultationFee consultationFee = new ConsultationFee(patient, feeAmount);
-
-        
-        return consultationFeeRepository.save(consultationFee);
-    }*/
+   
 
     
     public Patient findPatientById(int id) {
@@ -207,7 +223,7 @@ public class ReceptionistService {
         return consultationFee;
     }
     
-    public void sendPatientDetailsToNurse(int patientId) {
+    public void sendPatientDetailsToNurse(int patientId, int nurseIdentifier) {
         
         Patient patient = findPatientById(patientId);
 
@@ -216,10 +232,25 @@ public class ReceptionistService {
             throw new RuntimeException("Consultation fee has not been paid for this patient.");
         }
 
-        // Logic to send patient details to the nurse (e.g., notification or logging)
-        System.out.println("Patient details sent to the nurse: " + patient.getUserDetails().getFirstname());
-    }
+       
+        Optional<Nurse> optionalNurse = nurseRepository.findById(nurseIdentifier);
 
+        
+        Nurse nurse = optionalNurse.orElseThrow(() -> new RuntimeException("Nurse not found."));
+
+        
+        String role = nurse.getUserDetails().getUser().getRole().getRole();
+       
+
+        if (role.equalsIgnoreCase("NURSE")) {
+        	
+        	
+            // Logic to send patient details to the nurse  ....
+            System.out.println("Patient details sent to Nurse: " + nurse.getUserDetails().getFirstname() + " " + nurse.getUserDetails().getLastname());
+        } else {
+            throw new RuntimeException("The specified user is not a nurse.");
+        }
+    }
 
 
 }

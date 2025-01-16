@@ -8,4 +8,6 @@ import com.example.HospitalManagementSystem.model.UserDetails;
 
 public interface PatientRepository extends JpaRepository<Patient, Integer>{
 
+	
+
 }

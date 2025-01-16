@@ -1,18 +1,40 @@
 package com.example.HospitalManagementSystem.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Entity
-public class Receptionist extends UserDetails {
+public class Receptionist {
 
-    public Receptionist() {
-        super();
-    }
-
-    public Receptionist(String firstname, String lastname, String email, String address, String contact,
-                        java.sql.Date dateOfBirth, String gender, User user) {
-        super(firstname, lastname, email, address, contact, dateOfBirth, gender, user);
-    }
-
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private int id;
+    
+    @ManyToOne
+    @JoinColumn(name = "userdetails_id")
+    private UserDetails userDetails;
+     public Receptionist() {
+		// TODO Auto-generated constructor stub
+	}
+	public int getId() {
+		return id;
+	}
+	public void setId(int id) {
+		this.id = id;
+	}
+	public UserDetails getUserDetails() {
+		return userDetails;
+	}
+	public void setUserDetails(UserDetails userDetails) {
+		this.userDetails = userDetails;
+	}
+	public Receptionist(UserDetails userDetails) {
+		this.userDetails = userDetails;
+	}
+     
     
 }
