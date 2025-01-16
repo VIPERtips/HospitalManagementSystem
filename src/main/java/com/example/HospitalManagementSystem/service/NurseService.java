@@ -61,7 +61,7 @@ public class NurseService {
 
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
             
-            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, nurseRole,null);
+            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, nurseRole);
             user = userRepository.save(user);
 
             

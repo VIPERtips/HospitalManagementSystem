@@ -39,7 +39,7 @@ public class AuthenticationService {
 		if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
 			// store user
 			User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null,
-					patientRole,null);
+					patientRole);
 			// save the user
 			user = userRepository.save(user);
 

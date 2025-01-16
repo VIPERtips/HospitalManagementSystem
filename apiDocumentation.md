@@ -110,7 +110,7 @@ Deletes an existing role.
 
 ## **Receptionist**  
 
-**Endpoint**: `/api/receptionists`  
+**Endpoint**: `/api/receptionist`  
 **Method**: `POST`
 
 Creates a new receptionist.  
@@ -132,7 +132,7 @@ Creates a new receptionist.
 
 ---
 
-**Endpoint**: `/api/receptionists/{id}`  
+**Endpoint**: `/api/receptionist/{id}`  
 **Method**: `GET`
 
 Fetches details of a specified receptionist.
