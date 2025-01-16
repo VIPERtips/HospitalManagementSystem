@@ -13,12 +13,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.HospitalManagementSystem.config.SpringSecurityUser;
+import com.example.HospitalManagementSystem.model.JwtResponse;
 import com.example.HospitalManagementSystem.model.Role;
 import com.example.HospitalManagementSystem.model.SignUpDto;
 import com.example.HospitalManagementSystem.model.User;
 import com.example.HospitalManagementSystem.service.AuthenticationService;
 import com.example.HospitalManagementSystem.service.RoleService;
 import com.example.HospitalManagementSystem.service.UserService;
+import com.example.HospitalManagementSystem.util.JwtUtil;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -48,6 +50,29 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody User user) {
+        String username = user.getUsername();
+        String password = user.getPassword();
+        
+        
+        User existingUser = userService.findByUsername(username);
+        
+        if (existingUser != null && passwordEncoder.matches(password, existingUser.getPassword())) {
+            
+            String role = existingUser.getRole().getRole();
+            String authToken = JwtUtil.generateToken(username, role);
+            
+            
+            return ResponseEntity.ok(new JwtResponse(authToken, existingUser.getRole(), existingUser.getUserDetails()));
+        } else {
+            return ResponseEntity.badRequest().body("Invalid credentials");
+        }
+    }
+
+	
+
+	
+	/*@PostMapping("/login")
 	public ResponseEntity<Object> login(@RequestBody User user,HttpSession session){
 		String username = user.getUsername();
 		String password = user.getPassword();
@@ -59,7 +84,7 @@ public class AuthenticationController {
 			 return ResponseEntity.badRequest().body("Invalid credentials");
 		}
 		
-	}
+	}*/
 	/*
 	 @PostMapping("/login")
 	    public ResponseEntity<Object> login(@RequestBody User user, HttpSession session) {

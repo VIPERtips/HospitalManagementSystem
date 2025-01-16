@@ -69,7 +69,7 @@ public class ReceptionistService {
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
             // Create user
             User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null,
-                    receptionistRole);
+                    receptionistRole,null);
             user = userRepository.save(user);
 
             // Create userDetails
@@ -83,7 +83,8 @@ public class ReceptionistService {
             userRepository.save(user);
             
             // Create and link Receptionist to UserDetails
-            Receptionist receptionist = new Receptionist(userDetails); 
+            Receptionist receptionist = new Receptionist(); 
+            receptionist.setUserDetails(userDetails);
             receptionistRepository.save(receptionist); 
 
 
@@ -162,7 +163,7 @@ public class ReceptionistService {
 
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
            
-            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole);
+            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole,null);
             user = userRepository.save(user);
 
             

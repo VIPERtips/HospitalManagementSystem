@@ -54,6 +54,7 @@ public class AdminInit implements CommandLineRunner {
         user.setPassword(passwordEncoder.encode("2020"));
         user.setRole(adminRole);
         user.setUserDetails(null); 
+        user.setAuthToken(null);
         userRepository.save(user);
         
         String toEmail = user.getUsername();
