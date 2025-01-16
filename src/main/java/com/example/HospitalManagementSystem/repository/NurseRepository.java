@@ -15,4 +15,7 @@ public interface NurseRepository extends JpaRepository<Nurse, Integer> {
     
     
     Optional<Nurse> findByUserDetails_FirstnameIgnoreCase(String firstname);
+
+
+	Optional<Nurse> findByUserDetails(UserDetails userDetails);
 }

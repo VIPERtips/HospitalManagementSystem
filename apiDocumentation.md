@@ -314,8 +314,17 @@ Deletes an existing nurse.
 - `404 Not Found`: `"Nurse not found"`  
 - `400 Bad Request`: `"Invalid data"`
 
----
 
 
+## **Get Patients Assigned to Logged-in Nurse**  
+**Endpoint**: `/nurse/patients`  
+**Method**: `GET`
 
+Retrieves the list of patients assigned to the currently logged-in nurse.
+
+**Request**:  
+- No parameters are required in the request as it uses the current logged-in nurse's credentials.
+
+**Response**:  
+- `200 OK`: Returns a list of patients assigned to the logged-in nurse.
 

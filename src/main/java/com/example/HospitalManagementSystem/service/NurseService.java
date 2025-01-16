@@ -23,8 +23,13 @@ import com.example.HospitalManagementSystem.repository.RoleRepository;
 import com.example.HospitalManagementSystem.repository.UserDetailsRepository;
 import com.example.HospitalManagementSystem.repository.UserRepository;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class NurseService {
+	
+	@Autowired
+	private HttpSession session;
 
     @Autowired
     private UserRepository userRepository;
@@ -149,4 +154,42 @@ public class NurseService {
         
         return patientVitalsRepository.findByPatientId(patientId);
     }
+    /*
+    public List<Patient> getPatientsAssignedToNurse(int nurseId) {
+        
+        Optional<Nurse> optionalNurse = nurseRepository.findById(nurseId);
+        Nurse nurse = optionalNurse.orElseThrow(() -> new RuntimeException("Nurse not found."));
+
+        
+        List<Patient> patients = patientRepository.findByNurse(nurse); 
+
+        if (patients.isEmpty()) {
+            throw new RuntimeException("No patients found for this nurse.");
+        }
+
+        return patients;
+    }*/  public List<Patient> getPatientsAssignedToLoggedInNurse() {
+        // Retrieve the logged-in nurse's username from the session
+        String username = (String) session.getAttribute("username");
+
+        if (username == null) {
+            throw new RuntimeException("No authenticated user found!");
+        }
+
+        // Find the nurse using the username of the logged-in nurse
+        User nurseUser = userRepository.findByUsername(username);
+        Nurse nurse = nurseRepository.findByUserDetails(nurseUser.getUserDetails())
+                                     .orElseThrow(() -> new RuntimeException("Nurse not found."));
+
+        // Get patients assigned to this nurse
+        List<Patient> patients = patientRepository.findByNurse(nurse);
+
+        if (patients.isEmpty()) {
+            throw new RuntimeException("No patients found for this nurse.");
+        }
+
+        return patients;
+    }
+
+
 }

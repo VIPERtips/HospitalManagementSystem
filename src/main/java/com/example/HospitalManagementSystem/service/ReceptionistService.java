@@ -232,25 +232,26 @@ public class ReceptionistService {
             throw new RuntimeException("Consultation fee has not been paid for this patient.");
         }
 
-       
+        
         Optional<Nurse> optionalNurse = nurseRepository.findById(nurseIdentifier);
 
-        
+       
         Nurse nurse = optionalNurse.orElseThrow(() -> new RuntimeException("Nurse not found."));
 
         
         String role = nurse.getUserDetails().getUser().getRole().getRole();
-       
-
-        if (role.equalsIgnoreCase("NURSE")) {
-        	
-        	
-            // Logic to send patient details to the nurse  ....
-            System.out.println("Patient details sent to Nurse: " + nurse.getUserDetails().getFirstname() + " " + nurse.getUserDetails().getLastname());
-        } else {
+        if (!role.equalsIgnoreCase("NURSE")) {
             throw new RuntimeException("The specified user is not a nurse.");
         }
+
+        
+        patient.setNurse(nurse);
+        patientRepository.save(patient);
+
+       
+        System.out.println("Patient details sent to Nurse: " + nurse.getUserDetails().getFirstname() + " " + nurse.getUserDetails().getLastname());
     }
+
 
 
 }

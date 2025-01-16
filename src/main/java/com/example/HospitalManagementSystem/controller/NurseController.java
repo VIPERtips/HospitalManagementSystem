@@ -1,12 +1,15 @@
 package com.example.HospitalManagementSystem.controller;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.HospitalManagementSystem.model.Nurse;
+import com.example.HospitalManagementSystem.model.Patient;
 import com.example.HospitalManagementSystem.model.PatientVitals;
 import com.example.HospitalManagementSystem.model.SignUpDto;
 import com.example.HospitalManagementSystem.model.UserDetails;
@@ -82,4 +85,29 @@ public class NurseController {
 	            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
 	        }
 	    }
+	 
+	 /*@GetMapping("/{nurseId}/patients")
+	 public ResponseEntity<List<Patient>> getPatientsAssignedToNurse(@PathVariable int nurseId) {
+	     try {
+	         List<Patient> patients = nurseService.getPatientsAssignedToNurse(nurseId);
+	         return ResponseEntity.ok(patients);
+	     } catch (RuntimeException e) {
+	         return ResponseEntity.badRequest().body(Collections.emptyList()); 
+	     } catch (Exception e) {
+	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+	     }
+	 }*/
+	 
+	 @GetMapping("/patients")
+	    public ResponseEntity<List<Patient>> getPatientsAssignedToLoggedInNurse() {
+	        try {
+	            List<Patient> patients = nurseService.getPatientsAssignedToLoggedInNurse();
+	            return ResponseEntity.ok(patients);
+	        } catch (RuntimeException e) {
+	            return ResponseEntity.badRequest().body(Collections.emptyList());
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
+	        }
+	    }
+
 }

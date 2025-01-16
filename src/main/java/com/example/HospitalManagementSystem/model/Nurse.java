@@ -1,11 +1,16 @@
 package com.example.HospitalManagementSystem.model;
 
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Nurse {
@@ -19,7 +24,19 @@ public class Nurse {
     @JoinColumn(name = "userdetails_id")
     private UserDetails userDetails;
     
-    public Nurse() {
+    @OneToMany(mappedBy = "nurse")
+    @JsonIgnore
+    private List<Patient> patients;
+    
+    public List<Patient> getPatients() {
+		return patients;
+	}
+
+	public void setPatients(List<Patient> patients) {
+		this.patients = patients;
+	}
+
+	public Nurse() {
 		// TODO Auto-generated constructor stub
 	}
 
