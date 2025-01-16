@@ -181,18 +181,45 @@ public class ReceptionistService {
         }
     }
     
-   
+   /*
     public ConsultationFee chargeConsultationFee(Patient patient, double feeAmount) {
         
         ConsultationFee consultationFee = new ConsultationFee(patient, feeAmount);
 
         
         return consultationFeeRepository.save(consultationFee);
-    }
+    }*/
 
     
     public Patient findPatientById(int id) {
         return patientRepository.findById(id).orElseThrow(() -> new RuntimeException("Patient not found"));
     }
+    
+    public ConsultationFee chargeConsultationFee(Patient patient, double feeAmount) {
+        
+        ConsultationFee consultationFee = new ConsultationFee(patient, feeAmount);
+        consultationFeeRepository.save(consultationFee);
+
+        
+        patient.setConsultationFeePaid(true);
+        patientRepository.save(patient);
+
+        return consultationFee;
+    }
+    
+    public void sendPatientDetailsToNurse(int patientId) {
+        
+        Patient patient = findPatientById(patientId);
+
+        
+        if (!patient.isConsultationFeePaid()) {
+            throw new RuntimeException("Consultation fee has not been paid for this patient.");
+        }
+
+        // Logic to send patient details to the nurse (e.g., notification or logging)
+        System.out.println("Patient details sent to the nurse: " + patient.getUserDetails().getFirstname());
+    }
+
+
 
 }

@@ -99,5 +99,16 @@ public class ReceptionistController {
         }
     }
     
+    @PostMapping("/patient/{id}/send-to-nurse")
+    public ResponseEntity<String> sendPatientDetailsToNurse(@PathVariable int id) {
+        try {
+            receptionistService.sendPatientDetailsToNurse(id);
+            return ResponseEntity.ok("Patient details sent to the nurse.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+        }
+    }
+
+    
     
 }

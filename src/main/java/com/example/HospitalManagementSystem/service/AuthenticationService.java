@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.HospitalManagementSystem.model.Patient;
 import com.example.HospitalManagementSystem.model.Role;
 import com.example.HospitalManagementSystem.model.SignUpDto;
 import com.example.HospitalManagementSystem.model.User;
@@ -17,6 +18,9 @@ import com.example.HospitalManagementSystem.repository.UserRepository;
 public class AuthenticationService {
 	@Autowired
 	private EmailSender emailSender;
+	
+	@Autowired
+	private PatientRepository patientRepository;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;
@@ -47,6 +51,12 @@ public class AuthenticationService {
 			user.setUserDetails(userDetails);
 			//save user again
 			userRepository.save(user);
+			
+			 
+            Patient patient = new Patient(userDetails,null);
+
+            
+            patientRepository.save(patient);
 			//sending email
 			String toEmail = userDetails.getEmail();
 	        String subject = "Registration Email From I-Hub Hospital";

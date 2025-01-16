@@ -167,6 +167,24 @@ Registers a new patient by a receptionist.
 
 
 
+**Send Patient Details to Nurse**
+**Description**  
+Allows the receptionist to send patient details to the nurse. The action is permitted only if the consultation fee has been paid.
+
+- **URL**: `/patient/{id}/send-to-nurse`
+- **Method**: `POST`
+- **Path Parameters**:
+  - `id` (integer): The unique identifier of the patient.
+
+-
+- **Response**:
+  - **200 OK**:  
+    Patient details successfully sent to the nurse.
+  
+  - **400 Bad Request**:  
+    Consultation fee not paid or patient not found.
+   
+
 ## **Find Patient**  
 **Endpoint**: `/api/receptionists/patients/{id}`  
 **Method**: `GET`

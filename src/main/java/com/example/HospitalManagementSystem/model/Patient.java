@@ -35,8 +35,42 @@ public class Patient {
     @ManyToOne
     @JoinColumn(name = "created_by_id")
     private User createdBy;
+    
+    private boolean consultationFeePaid = false;
 
-    public Patient() {
+    public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public Receptionist getReceptionist() {
+		return receptionist;
+	}
+
+	public void setReceptionist(Receptionist receptionist) {
+		this.receptionist = receptionist;
+	}
+
+	public List<ConsultationFee> getConsultationFees() {
+		return consultationFees;
+	}
+
+	public void setConsultationFees(List<ConsultationFee> consultationFees) {
+		this.consultationFees = consultationFees;
+	}
+
+	public boolean isConsultationFeePaid() {
+		return consultationFeePaid;
+	}
+
+	public void setConsultationFeePaid(boolean consultationFeePaid) {
+		this.consultationFeePaid = consultationFeePaid;
+	}
+
+	public Patient() {
         // Default constructor
     }
 
