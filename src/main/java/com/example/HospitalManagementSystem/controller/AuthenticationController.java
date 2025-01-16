@@ -48,21 +48,21 @@ public class AuthenticationController {
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody User user,HttpSession session){
+	public ResponseEntity<Object> login(@RequestBody User user,HttpSession session){
 		String username = user.getUsername();
 		String password = user.getPassword();
 		User existingUser = userService.findByUsername(username);
 		if(existingUser!=null && passwordEncoder.matches(password, existingUser.getPassword())) {
 			session.setAttribute("username", username);
-			return ResponseEntity.ok(("Login successfull"));
+			return ResponseEntity.ok(existingUser);
 		}else {
 			 return ResponseEntity.badRequest().body("Invalid credentials");
 		}
 		
 	}
-	
-	/* @PostMapping("/login")
-	    public ResponseEntity<String> login(@RequestBody User user, HttpSession session) {
+	/*
+	 @PostMapping("/login")
+	    public ResponseEntity<Object> login(@RequestBody User user, HttpSession session) {
 	        String username = user.getUsername();
 	        String password = user.getPassword();
 	        User existingUser = userService.findByUsername(username);
@@ -76,13 +76,13 @@ public class AuthenticationController {
 	            );
 
 	            // Store in the session
-	            session.setAttribute("loggedInUser", springSecurityUser);
+	            session.setAttribute("username", springSecurityUser);
 
-	            return ResponseEntity.ok("Login successful");
+	            return ResponseEntity.ok(existingUser);
 	        } else {
 	            return ResponseEntity.badRequest().body("Invalid credentials");
 	        }
 	    }
-	*/
-
+	
+*/
 }

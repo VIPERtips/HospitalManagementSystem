@@ -86,17 +86,7 @@ public class NurseController {
 	        }
 	    }
 	 
-	 /*@GetMapping("/{nurseId}/patients")
-	 public ResponseEntity<List<Patient>> getPatientsAssignedToNurse(@PathVariable int nurseId) {
-	     try {
-	         List<Patient> patients = nurseService.getPatientsAssignedToNurse(nurseId);
-	         return ResponseEntity.ok(patients);
-	     } catch (RuntimeException e) {
-	         return ResponseEntity.badRequest().body(Collections.emptyList()); 
-	     } catch (Exception e) {
-	         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
-	     }
-	 }*/
+	
 	 
 	 @GetMapping("/patients")
 	    public ResponseEntity<List<Patient>> getPatientsAssignedToLoggedInNurse() {

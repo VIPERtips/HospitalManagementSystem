@@ -40,11 +40,12 @@ public class AdminInit implements CommandLineRunner {
 
         // Find the admin role
         Role adminRole = roleRepository.findByRole("ADMIN");
-        Role role = new Role("Admin",true);
+        
         
         if (adminRole == null) {
-            roleService.createRole(role);
-            roleRepository.save(role);
+            adminRole = new Role("ADMIN", true);
+            roleRepository.save(adminRole);  
+            System.out.println("Created ADMIN role.");
         }
 
         // Create a new admin user
@@ -52,7 +53,7 @@ public class AdminInit implements CommandLineRunner {
         user.setUsername("youngtips23@gmail.com");
         user.setPassword(passwordEncoder.encode("2020"));
         user.setRole(adminRole);
-        user.setUserDetails(null); // Set this only if null is intentional
+        user.setUserDetails(null); 
         userRepository.save(user);
         
         String toEmail = user.getUsername();
