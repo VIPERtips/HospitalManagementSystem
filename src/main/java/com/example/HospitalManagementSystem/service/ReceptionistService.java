@@ -69,7 +69,7 @@ public class ReceptionistService {
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
             // Create user
             User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null,
-                    receptionistRole);
+                    receptionistRole,null);
             user = userRepository.save(user);
 
             // Create userDetails
@@ -83,8 +83,13 @@ public class ReceptionistService {
             userRepository.save(user);
             
             // Create and link Receptionist to UserDetails
-            Receptionist receptionist = new Receptionist(userDetails); 
+            Receptionist receptionist = new Receptionist(); 
+            receptionist.setUserDetails(userDetails);
             receptionistRepository.save(receptionist); 
+            
+            
+            System.out.println("Receptionist ID: " + receptionist.getId());
+            System.out.println("User ID: " + user.getId());
 
 
             return user;
@@ -92,7 +97,6 @@ public class ReceptionistService {
             throw new RuntimeException("Passwords do not match!");
         }
     }
-
     
     public List<UserDetails> getAllReceptionists() {
         Role receptionistRole = roleRepository.findByRole("RECEPTIONIST");
@@ -162,7 +166,7 @@ public class ReceptionistService {
 
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
            
-            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole);
+            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole,null);
             user = userRepository.save(user);
 
             

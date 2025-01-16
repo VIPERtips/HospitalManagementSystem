@@ -16,16 +16,27 @@ public class User {
 	@JoinColumn(name = "role_id")
 	private Role role;
 	
+	private String authToken;
+	
+	public String getAuthToken() {
+		return authToken;
+	}
+
+	public void setAuthToken(String authToken) {
+		this.authToken = authToken;
+	}
+
 	public User() {
 		// TODO Auto-generated constructor stub
 	}
 
 	public User(String username, String password, UserDetails userDetails,
-	Role role) {
+	Role role,String token) {
 		this.username = username;
 		this.password = password;
 		this.userDetails = userDetails;
 		this.role = role;
+		this.authToken = token;
 	}
 
 	public int getId() {
