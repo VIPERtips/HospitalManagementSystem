@@ -143,7 +143,7 @@ Fetches details of a specified receptionist.
 ---
 
 ## **Register Patient**  
-**Endpoint**: `/api/receptionists/patient/register`  
+**Endpoint**: `/api/receptionists/patients/register`  
 **Method**: `POST`
 
 Registers a new patient by a receptionist.
@@ -171,7 +171,7 @@ Registers a new patient by a receptionist.
 **Description**:  
 Allows the receptionist to send patient details to the nurse. The action is permitted only if the consultation fee has been paid.
 
-- **URL**: `/patient/{id}/send-to-nurse`
+- **URL**: `/patients/{id}/send-to-nurse`
 - **Method**: `POST`
 - **Path Parameters**:  
   - `id` (integer): The unique identifier of the patient.
@@ -186,6 +186,7 @@ Allows the receptionist to send patient details to the nurse. The action is perm
 ---
 
 ## **Find Patient**  
+**Endpoint**: `/api/receptionists/patients/{id}`  
 **Endpoint**: `/api/receptionists/patients/{id}`  
 **Method**: `GET`
 

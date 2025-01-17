@@ -68,7 +68,7 @@ public class ReceptionistController {
         }
     }
     
-    @PostMapping("/patient/register")
+    @PostMapping("/patients/register")
     public ResponseEntity<String> registerPatient(@RequestBody SignUpDto signUpDto) {
         try {
             
@@ -78,7 +78,7 @@ public class ReceptionistController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-    @GetMapping("/patient/{id}")
+    @GetMapping("/patients/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable int id) {
         try {
             Patient patient = receptionistService.findPatientById(id);
@@ -89,7 +89,7 @@ public class ReceptionistController {
     }
 
     
-    @PostMapping("/patient/{id}/charge-consultation-fee")
+    @PostMapping("/patients/{id}/charge-consultation-fee")
     public ResponseEntity<String> chargeConsultationFee(@PathVariable int id, @RequestParam double feeAmount) {
         try {
             Patient patient = receptionistService.findPatientById(id);
@@ -99,7 +99,7 @@ public class ReceptionistController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
-    @PostMapping("/patient/{id}/send-to-nurse")
+    @PostMapping("/patients/{id}/send-to-nurse")
     public ResponseEntity<String> sendPatientDetailsToNurse(@PathVariable int id, @RequestBody int nurseIdentifier) {
         try {
             receptionistService.sendPatientDetailsToNurse(id, nurseIdentifier);
@@ -109,6 +109,12 @@ public class ReceptionistController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unexpected error: " + e.getMessage());
         }
+    }
+    
+    @GetMapping("/patients")
+    public ResponseEntity<List<Patient>> getAllPatients() {
+        List<Patient> patients = receptionistService.getAllPatientsWithDetails();
+        return ResponseEntity.ok(patients);
     }
 
     

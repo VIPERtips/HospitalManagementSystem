@@ -1,6 +1,7 @@
 package com.example.HospitalManagementSystem.service;
 
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -255,6 +256,81 @@ public class ReceptionistService {
        
         System.out.println("Patient details sent to Nurse: " + nurse.getUserDetails().getFirstname() + " " + nurse.getUserDetails().getLastname());
     }
+    
+   /* public List<UserDetails> getAllPatients() {
+        Role patientRole = roleRepository.findByRole("PATIENT");
+        return userDetailsRepository.findAll().stream()
+                .filter(userDetails -> userDetails.getUser().getRole().equals(patientRole))
+                .collect(Collectors.toList());
+    }*/
+    
+   /* public List<Patient> getAllPatientsWithDetails() {
+        return patientRepository.findAll().stream()
+                .peek(patient -> {
+                    // Check if the patient has associated UserDetails
+                    UserDetails userDetails = patient.getUserDetails();
+                    if (userDetails != null) {
+                        System.out.println("Patient Name: " + userDetails.getFirstname() + " " + userDetails.getLastname());
+                        System.out.println("Created By (Receptionist): " + patient.getUserDetails().getFirstname());
+                        System.out.println("Consultation Fee: " + patient.getConsultationFees());
+                    } else {
+                        System.out.println("User details are missing for patient ID: " + patient.getId());
+                    }
+
+                    // Check if the createdBy (Receptionist) has UserDetails
+                    if (patient.getCreatedBy() != null && patient.getCreatedBy().getUserDetails() != null) {
+                        System.out.println("Created By (Receptionist): " + patient.getCreatedBy().getUserDetails().getFirstname());
+                    } else {
+                        System.out.println("No Receptionist details available for patient ID: " + patient.getId());
+                    }
+
+                })
+                .collect(Collectors.toList());
+    }*/
+    
+    public List<Patient> getAllPatientsWithDetails() {
+        // Fetch the "Patient" role from the repository
+        Role patientRole = roleRepository.findByRole("Patient");
+
+        // If the patientRole is null, log an error and return an empty list
+        if (patientRole == null) {
+            System.out.println("Patient role not found!");
+            return new ArrayList<>();
+        }
+
+        // Filter patients based on the "Patient" role
+        return patientRepository.findAll().stream()
+                .filter(patient -> {
+                    // Ensure patient has UserDetails and the role is "Patient"
+                    UserDetails userDetails = patient.getUserDetails();
+                    if (userDetails != null && userDetails.getUser() != null) {
+                        String userRole = userDetails.getUser().getRole().getRole();
+                        return "Patient".equalsIgnoreCase(userRole); // Match exactly "Patient"
+                    }
+                    return false;
+                })
+                .peek(patient -> {
+                    // Log patient details for debugging
+                    UserDetails userDetails = patient.getUserDetails();
+                    if (userDetails != null) {
+                        System.out.println("Patient Name: " + userDetails.getFirstname() + " " + userDetails.getLastname());
+                    }
+
+                    // Log related information for patient
+                    if (patient.getCreatedBy() != null && patient.getCreatedBy().getUserDetails() != null) {
+                        System.out.println("Created By (Receptionist): " + patient.getCreatedBy().getUserDetails().getFirstname());
+                    }
+                    if (patient.getNurse() != null && patient.getNurse().getUserDetails() != null) {
+                        System.out.println("Assigned Nurse: " + patient.getNurse().getUserDetails().getFirstname());
+                    }
+                    if (patient.getConsultationFees() != null) {
+                        System.out.println("Consultation Fee: " + patient.getConsultationFees());
+                    }
+                })
+                .collect(Collectors.toList());
+    }
+
+
 
 
 
