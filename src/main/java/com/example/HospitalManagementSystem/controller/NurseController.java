@@ -67,15 +67,17 @@ public class NurseController {
 		}
 	}
 	
-	 @PostMapping("/patients/{patientId}/vitals")
-	    public ResponseEntity<String> recordPatientVitals(@PathVariable int patientId, @RequestBody PatientVitals vitals) {
-	        try {
-	            nurseService.recordPatientVitals(patientId, vitals);
-	            return ResponseEntity.ok("Vitals recorded successfully for Patient ID: " + patientId);
-	        } catch (Exception e) {
-	            return ResponseEntity.badRequest().body("Error: " + e.getMessage());
-	        }
+	@PostMapping("/patients/{patientId}/vitals")
+	public ResponseEntity<String> recordPatientVitals(@PathVariable int patientId, @RequestBody PatientVitals vitals) {
+	    try {
+	        
+	        nurseService.recordVitals(patientId, vitals.getTemperature(), vitals.getWeight(), vitals.getBloodPressure(), vitals.getHeartRate());
+	        return ResponseEntity.ok("Vitals recorded successfully for Patient ID: " + patientId);
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body("Error: " + e.getMessage());
 	    }
+	}
+
 	 
 	 @GetMapping("/patients/{patientId}/vitals")
 	    public ResponseEntity<?> getPatientVitals(@PathVariable int patientId) {
@@ -99,5 +101,6 @@ public class NurseController {
 	            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.emptyList());
 	        }
 	    }
+	 
 
 }

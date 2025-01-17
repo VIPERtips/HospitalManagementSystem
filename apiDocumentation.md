@@ -1,4 +1,3 @@
-
 # API Documentation
 
 ## **Sign Up**  
@@ -141,6 +140,7 @@ Fetches details of a specified receptionist.
 - `200 OK`: A detailed response with the receptionist details.  
 - `404 Not Found`: `"Receptionist not found"`
 
+---
 
 ## **Register Patient**  
 **Endpoint**: `/api/receptionists/patient/register`  
@@ -165,25 +165,25 @@ Registers a new patient by a receptionist.
 - `400 Bad Request`: `"Error: Email already exists. Please use a different email address."`  
 - `401 Unauthorized`: `"No authenticated user found!"`
 
+---
 
-
-**Send Patient Details to Nurse**
-**Description**  
+**Send Patient Details to Nurse**  
+**Description**:  
 Allows the receptionist to send patient details to the nurse. The action is permitted only if the consultation fee has been paid.
 
 - **URL**: `/patient/{id}/send-to-nurse`
 - **Method**: `POST`
-- **Path Parameters**:
+- **Path Parameters**:  
   - `id` (integer): The unique identifier of the patient.
-
--
-- **Response**:
-  - **200 OK**:  
+  
+- **Response**:  
+  - `200 OK`:  
     Patient details successfully sent to the nurse.
   
-  - **400 Bad Request**:  
+  - `400 Bad Request`:  
     Consultation fee not paid or patient not found.
-   
+
+---
 
 ## **Find Patient**  
 **Endpoint**: `/api/receptionists/patients/{id}`  
@@ -192,7 +192,7 @@ Allows the receptionist to send patient details to the nurse. The action is perm
 Fetches details of a specified patient.
 
 **Response**:  
-- `200 OK`: A response with the patient details.
+- `200 OK`: A response with the patient details.  
 - `400 Bad Request`: `"Patient not found"`
 
 ---
@@ -212,6 +212,7 @@ Charges the consultation fee to a patient.
 - `400 Bad Request`: `"Error: Patient not found"`  
 - `400 Bad Request`: `"Error: Unable to charge consultation fee"`
 
+---
 
 ## **Send Patient Details to Nurse**  
 **Endpoint**: `/patient/{id}/send-to-nurse`  
@@ -223,12 +224,9 @@ Sends patient details to the nurse by the nurse's ID.
 - `id` (required) - Patient ID (integer)  
 - `nurseIdentifier` (required) - Nurse ID (integer)
 
-**Request Body**
-
---- 
 ---
 
-## **Nurse**
+## **Nurse**  
 
 ### **Create Nurse**  
 **Endpoint**: `/api/nurses`  
@@ -314,7 +312,7 @@ Deletes an existing nurse.
 - `404 Not Found`: `"Nurse not found"`  
 - `400 Bad Request`: `"Invalid data"`
 
-
+---
 
 ## **Get Patients Assigned to Logged-in Nurse**  
 **Endpoint**: `/nurse/patients`  
@@ -328,3 +326,25 @@ Retrieves the list of patients assigned to the currently logged-in nurse.
 **Response**:  
 - `200 OK`: Returns a list of patients assigned to the logged-in nurse.
 
+---
+
+## **Record Patient Vitals**
+
+**Endpoint**: `/api/nurses/patients/{patientId}/vitals`  
+**Method**: `POST`
+
+Allows the nurse to record the patient's vitals.
+
+**Takes**:  
+- `temperature` (required)  
+- `bloodPressure` (required)  
+- `heartRate` (required)  
+- `respirationRate` (required)
+
+**Response**:  
+- `200 OK`: `"Vitals recorded successfully"`  
+- `400 Bad Request`: `"Invalid patient or vitals data"`
+
+---
+
+**END OF DOCUMENTATION**

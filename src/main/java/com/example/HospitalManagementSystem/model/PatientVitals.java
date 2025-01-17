@@ -1,5 +1,7 @@
 package com.example.HospitalManagementSystem.model;
 
+import java.sql.Date;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -12,6 +14,7 @@ public class PatientVitals {
     private Double weight;       
     private String bloodPressure; 
     private Integer heartRate;   
+    private Date date;
    
 
     @ManyToOne
@@ -76,6 +79,15 @@ public class PatientVitals {
 		this.bloodPressure = bloodPressure;
 		this.heartRate = heartRate;
 		this.patient = patient;
+		this.date = new Date(System.currentTimeMillis());
+	}
+
+	public Date getDate() {
+		return date;
+	}
+
+	public void setDate(Date date) {
+		this.date = date;
 	}
 }
 
