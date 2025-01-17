@@ -346,5 +346,60 @@ Allows the nurse to record the patient's vitals.
 - `400 Bad Request`: `"Invalid patient or vitals data"`
 
 ---
+## 1. Create a Doctor
+**Description:** Adds a new doctor to the system.
+- **Method:** `POST`
+- **URL:** `/api/doctors`
+- **Headers:**
+  - `Content-Type: application/json`
+- **Response Codes:**
+  - `200 OK`: Doctor created successfully.
+  - `400 Bad Request`: Validation error or other issues.
+
+---
+
+### 2. Get All Doctors
+**Description:** Retrieves a list of all doctors.
+- **Method:** `GET`
+- **URL:** `/api/doctors`
+- **Response Codes:**
+  - `200 OK`: Returns the list of doctors.
+
+---
+
+### 3. Get Doctor by ID
+**Description:** Fetches details of a specific doctor by their ID.
+- **Method:** `GET`
+- **URL:** `/api/doctors/{id}`
+  - Replace `{id}` with the ID of the doctor.
+- **Response Codes:**
+  - `200 OK`: Doctor details retrieved successfully.
+  - `404 Not Found`: Doctor with the specified ID does not exist.
+
+---
+
+### 4. Update a Doctor
+**Description:** Updates the details of a specific doctor.
+- **Method:** `PUT`
+- **URL:** `/api/doctors/{id}`
+  - Replace `{id}` with the ID of the doctor.
+- **Headers:**
+  - `Content-Type: application/json`
+- **Response Codes:**
+  - `200 OK`: Doctor details updated successfully.
+  - `400 Bad Request`: Validation error or other issues.
+
+---
+
+### 5. Delete a Doctor
+**Description:** Deletes a specific doctor from the system.
+- **Method:** `DELETE`
+- **URL:** `/api/doctors/{id}`
+  - Replace `{id}` with the ID of the doctor.
+- **Response Codes:**
+  - `200 OK`: Doctor deleted successfully.
+  - `400 Bad Request`: Error during deletion.
+
+---
 
 **END OF DOCUMENTATION**
