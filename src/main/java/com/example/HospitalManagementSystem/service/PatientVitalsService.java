@@ -20,13 +20,5 @@ public class PatientVitalsService {
 		return patientVitalsRepository.findByPatientId(patientId);
 	}
 
-	// Added method to find vital signs by nurse ID**
-	public List<PatientVitals> findByNurseId(int nurseId) {
-		return patientVitalsRepository.findByNurseId(nurseId); // **Utilizes the repository method**
-	}
-
-	// **Added method to find vital signs by doctor ID**
-	public List<PatientVitals> findByDoctorId(int doctorId) {
-		return patientVitalsRepository.findByDoctorId(doctorId);
-	}
+	
 }

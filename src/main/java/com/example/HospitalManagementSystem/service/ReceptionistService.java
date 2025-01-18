@@ -161,7 +161,7 @@ public class ReceptionistService {
             throw new RuntimeException("Receptionist not found with the provided username.");
         }
 
-        // Get the "Patient" role
+        
         Role patientRole = roleRepository.findByRole("Patient");
         if (patientRole == null) {
             throw new RuntimeException("Role 'Patient' does not exist.");
@@ -172,13 +172,13 @@ public class ReceptionistService {
             throw new RuntimeException("Email already exists. Please use a different email address.");
         }
 
-        // Check if the passwords match
+       
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
-            // Create and save the new user
+            
             User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole, null);
             user = userRepository.save(user);
 
-            // Create and save user details
+           
             UserDetails userDetails = new UserDetails(
                 signUpDto.getFirstname(),
                 signUpDto.getLastname(),
@@ -191,15 +191,15 @@ public class ReceptionistService {
             );
             userDetails = userDetailsRepository.save(userDetails);
 
-            // Create and save patient
+           
             Patient patient = new Patient(userDetails, receptionist);
             patientRepository.save(patient);
 
-            // Update user with user details
+           
             user.setUserDetails(userDetails);
             userRepository.save(user);
 
-            // Send registration email
+            
             String toEmail = userDetails.getEmail();
             String subject = "Registration Email From I-Hub Hospital";
             String body = String.format("Dear %s,\n\nWelcome to I-Hub Hospital! Here are your login credentials:\n\nUsername: %s\nPassword: %s\n\nPlease keep this information safe.\n\nBest regards,\nI-Hub Hospital Team",
@@ -260,7 +260,7 @@ public class ReceptionistService {
     }
        
     public List<Patient> getAllPatientsWithDetails() {
-        // Fetch the "Patient" role from the repository
+        
         Role patientRole = roleRepository.findByRole("Patient");
 
        

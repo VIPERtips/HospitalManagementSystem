@@ -28,18 +28,5 @@ public class PatientVitalsController {
 		return ResponseEntity.ok(vitalSigns);
 	}
 
-	// Added endpoint to get vital signs by nurse ID**
-	@GetMapping("/nurses/{nurseId}")
-	public ResponseEntity<List<PatientVitals>> getVitalSignsForNurse(@PathVariable int nurseId) {
-		List<PatientVitals> vitalSigns = patientVitalsService.findByNurseId(nurseId); // **Utilizes the service method**
-		return ResponseEntity.ok(vitalSigns);
-	}
-
-	// **Added endpoint to get vital signs by doctor ID**
-	@GetMapping("/doctors/{doctorId}")
-	public ResponseEntity<List<PatientVitals>> getVitalSignsForDoctor(@PathVariable int doctorId) {
-		List<PatientVitals> vitalSigns = patientVitalsService.findByDoctorId(doctorId); // **Utilizes the service
-																						// method**
-		return ResponseEntity.ok(vitalSigns);
-	}
+	
 }

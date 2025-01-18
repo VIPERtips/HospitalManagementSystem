@@ -9,6 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.HospitalManagementSystem.model.Doctor;
 import com.example.HospitalManagementSystem.model.Nurse;
 import com.example.HospitalManagementSystem.model.Patient;
 import com.example.HospitalManagementSystem.model.PatientVitals;
@@ -16,6 +17,7 @@ import com.example.HospitalManagementSystem.model.Role;
 import com.example.HospitalManagementSystem.model.SignUpDto;
 import com.example.HospitalManagementSystem.model.User;
 import com.example.HospitalManagementSystem.model.UserDetails;
+import com.example.HospitalManagementSystem.repository.DoctorRepository;
 import com.example.HospitalManagementSystem.repository.NurseRepository;
 import com.example.HospitalManagementSystem.repository.PatientRepository;
 import com.example.HospitalManagementSystem.repository.PatientVitalsRepository;
@@ -27,6 +29,9 @@ import jakarta.servlet.http.HttpSession;
 
 @Service
 public class NurseService {
+	
+	@Autowired
+	private DoctorRepository doctorRepository;
 
 	@Autowired
 	private HttpSession session;
@@ -135,6 +140,49 @@ public class NurseService {
 
 	    patientVitalsRepository.save(vitals);
 	}
+	
+	public void updateVitals(int vitalsId, Double temperature, Double weight, String bloodPressure, Integer heartRate) {
+	    
+	    PatientVitals vitals = patientVitalsRepository.findById(vitalsId)
+	            .orElseThrow(() -> new RuntimeException("Vitals not found"));
+
+	    
+	    vitals.setTemperature(temperature);
+	    vitals.setWeight(weight);
+	    vitals.setBloodPressure(bloodPressure);
+	    vitals.setHeartRate(heartRate);
+
+	    
+	    patientVitalsRepository.save(vitals);
+	}
+	
+	public void deleteVitals(int vitalsId) {
+	    
+	    PatientVitals vitals = patientVitalsRepository.findById(vitalsId)
+	            .orElseThrow(() -> new RuntimeException("Vitals not found"));
+
+	   
+	    patientVitalsRepository.delete(vitals);
+	}
+	
+	public void sendVitalsToDoctor(int vitalsId, int doctorId) {
+	    
+	    PatientVitals vitals = patientVitalsRepository.findById(vitalsId)
+	            .orElseThrow(() -> new RuntimeException("Vitals not found"));
+
+	   
+	    Doctor doctor = doctorRepository.findById(doctorId)
+	            .orElseThrow(() -> new RuntimeException("Doctor not found"));
+
+	   
+	    vitals.setDoctor(doctor);
+
+	    
+	    patientVitalsRepository.save(vitals);
+	}
+
+
+
 
 
 

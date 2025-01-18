@@ -77,6 +77,42 @@ public class NurseController {
 	        return ResponseEntity.badRequest().body("Error: " + e.getMessage());
 	    }
 	}
+	
+	@PutMapping("/patients/vitals/{vitalsId}")
+	public ResponseEntity<String> updatePatientVitals(@PathVariable int vitalsId, @RequestBody PatientVitals vitals) {
+	    try {
+	        
+	        nurseService.updateVitals(vitalsId, vitals.getTemperature(), vitals.getWeight(), vitals.getBloodPressure(), vitals.getHeartRate());
+	        return ResponseEntity.ok("Vitals updated successfully for Vitals ID: " + vitalsId);
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+	    }
+	}
+	
+	@DeleteMapping("/patients/vitals/{vitalsId}")
+	public ResponseEntity<String> deletePatientVitals(@PathVariable int vitalsId) {
+	    try {
+	        
+	        nurseService.deleteVitals(vitalsId);
+	        return ResponseEntity.ok("Vitals deleted successfully for Vitals ID: " + vitalsId);
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+	    }
+	}
+	
+	@PostMapping("/patients/vitals/{vitalsId}/send-to-doctor/{doctorId}")
+	public ResponseEntity<String> sendVitalsToDoctor(@PathVariable int vitalsId, @PathVariable int doctorId) {
+	    try {
+	        
+	        nurseService.sendVitalsToDoctor(vitalsId, doctorId);
+	        return ResponseEntity.ok("Vitals sent to Doctor ID: " + doctorId);
+	    } catch (Exception e) {
+	        return ResponseEntity.badRequest().body("Error: " + e.getMessage());
+	    }
+	}
+
+
+
 
 	 
 	 @GetMapping("/patients/{patientId}/vitals")

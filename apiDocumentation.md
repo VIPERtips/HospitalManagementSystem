@@ -315,7 +315,7 @@ Deletes an existing nurse.
 
 ---
 
-## **Get Patients Assigned to Logged-in Nurse**  
+### **Get Patients Assigned to Logged-in Nurse**  
 **Endpoint**: `/nurse/patients`  
 **Method**: `GET`
 
@@ -329,22 +329,93 @@ Retrieves the list of patients assigned to the currently logged-in nurse.
 
 ---
 
-## **Record Patient Vitals**
 
-**Endpoint**: `/api/nurses/patients/{patientId}/vitals`  
-**Method**: `POST`
+### 1. **Record Patient Vitals**
 
-Allows the nurse to record the patient's vitals.
+**Method:** `POST`
 
-**Takes**:  
-- `temperature` (required)  
-- `bloodPressure` (required)  
-- `heartRate` (required)  
-- `respirationRate` (required)
+**URL:** `/api/nurses/patients/{patientId}/vitals`
 
-**Response**:  
-- `200 OK`: `"Vitals recorded successfully"`  
-- `400 Bad Request`: `"Invalid patient or vitals data"`
+**Description:** Records vitals for a patient.
+
+**Request Parameters:**
+- `patientId` (Path Variable): ID of the patient.
+
+**Request Body (JSON):**
+```json
+{
+    "temperature": 37.5,
+    "weight": 70.5,
+    "bloodPressure": "120/80",
+    "heartRate": 75
+}
+```
+
+**Response:**
+- **200 OK**: Vitals recorded successfully.
+- **400 Bad Request**: Error message if the operation fails.
+
+---
+
+### 2. **Update Patient Vitals**
+
+**Method:** `PUT`
+
+**URL:** `/api/nurses/patients/vitals/{vitalsId}`
+
+**Description:** Updates the vitals for a patient.
+
+**Request Parameters:**
+- `vitalsId` (Path Variable): ID of the vitals record to update.
+
+**Request Body (JSON):**
+```json
+{
+    "temperature": 38.0,
+    "weight": 72.0,
+    "bloodPressure": "130/85",
+    "heartRate": 80
+}
+```
+
+**Response:**
+- **200 OK**: Vitals updated successfully.
+- **400 Bad Request**: Error message if the operation fails.
+
+---
+
+### 3. **Delete Patient Vitals**
+
+**Method:** `DELETE`
+
+**URL:** `/api/nurses/patients/vitals/{vitalsId}`
+
+**Description:** Deletes a vitals record for a patient.
+
+**Request Parameters:**
+- `vitalsId` (Path Variable): ID of the vitals record to delete.
+
+**Response:**
+- **200 OK**: Vitals deleted successfully.
+- **400 Bad Request**: Error message if the operation fails.
+
+---
+
+### 4. **Send Vitals to Doctor**
+
+**Method:** `POST`
+
+**URL:** `/api/nurses/patients/vitals/{vitalsId}/send-to-doctor/{doctorId}`
+
+**Description:** Sends a vitals record to a doctor.
+
+**Request Parameters:**
+- `vitalsId` (Path Variable): ID of the vitals record to send.
+- `doctorId` (Path Variable): ID of the doctor to receive the vitals.
+
+**Response:**
+- **200 OK**: Vitals sent successfully to the doctor.
+- **400 Bad Request**: Error message if the operation fails.
 
 ---
 ## 1. Create a Doctor
