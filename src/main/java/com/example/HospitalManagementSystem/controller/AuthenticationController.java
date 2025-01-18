@@ -3,6 +3,7 @@ package com.example.HospitalManagementSystem.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -19,9 +20,10 @@ import com.example.HospitalManagementSystem.model.User;
 import com.example.HospitalManagementSystem.service.AuthenticationService;
 import com.example.HospitalManagementSystem.service.RoleService;
 import com.example.HospitalManagementSystem.service.UserService;
+import com.example.HospitalManagementSystem.util.JWTUtil;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-
 
 @RestController
 @RequestMapping("/api")
@@ -29,16 +31,15 @@ import jakarta.servlet.http.HttpSession;
 public class AuthenticationController {
 	@Autowired
 	private AuthenticationService authenticationService;
-	
-	@Autowired 
+
+	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private UserService userService;
-	
-	
+
 	@PostMapping("/sign-up")
-	public ResponseEntity<String> signUp(@RequestBody SignUpDto signUpDto){
+	public ResponseEntity<String> signUp(@RequestBody SignUpDto signUpDto) {
 		try {
 			authenticationService.registerUser(signUpDto);
 			return ResponseEntity.ok("Sign up successful. Log in credentials sent to your email!");
@@ -46,43 +47,62 @@ public class AuthenticationController {
 			return ResponseEntity.badRequest().body(e.getMessage());
 		}
 	}
-	
+
 	@PostMapping("/login")
-	public ResponseEntity<Object> login(@RequestBody User user,HttpSession session){
+	public ResponseEntity<Object> login(@RequestBody User user,HttpSession session) {
 		String username = user.getUsername();
 		String password = user.getPassword();
 		User existingUser = userService.findByUsername(username);
-		if(existingUser!=null && passwordEncoder.matches(password, existingUser.getPassword())) {
+
+		if (existingUser != null && passwordEncoder.matches(password, existingUser.getPassword())) {
 			session.setAttribute("username", username);
-			return ResponseEntity.ok(existingUser);
-		}else {
-			 return ResponseEntity.badRequest().body("Invalid credentials");
+			String token = JWTUtil.generateToken(username);
+			existingUser.setAuthToken(token);
+			return ResponseEntity.ok().header("Authorization", "Bearer " + token).body(existingUser);
+		} else {
+			return ResponseEntity.badRequest().body("Invalid credentials");
 		}
-		
 	}
+
+	@PostMapping("/refresh-token")
+	public ResponseEntity<Object> refreshToken(HttpServletRequest request) {
+		String token = request.getHeader("Authorization");
+
+		if (token != null && JWTUtil.isTokenExpired(token)) {
+			String refreshedToken = JWTUtil.generateToken(JWTUtil.getUsername(token));
+			return ResponseEntity.ok().header("Authorization", "Bearer " + refreshedToken).build();
+		}
+		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token is still valid");
+	}
+
 	/*
-	 @PostMapping("/login")
-	    public ResponseEntity<Object> login(@RequestBody User user, HttpSession session) {
-	        String username = user.getUsername();
-	        String password = user.getPassword();
-	        User existingUser = userService.findByUsername(username);
-
-	        if (existingUser != null && passwordEncoder.matches(password, existingUser.getPassword())) {
-	            // Create SpringSecurityUser object
-	            SpringSecurityUser springSecurityUser = new SpringSecurityUser(
-	                    existingUser.getUsername(),
-	                    existingUser.getPassword(),
-	                    existingUser.getRole().getAuthority() 
-	            );
-
-	            // Store in the session
-	            session.setAttribute("username", springSecurityUser);
-
-	            return ResponseEntity.ok(existingUser);
-	        } else {
-	            return ResponseEntity.badRequest().body("Invalid credentials");
-	        }
-	    }
-	
-*/
+	 * @PostMapping("/login") public ResponseEntity<Object> login(@RequestBody User
+	 * user,HttpSession session){ String username = user.getUsername(); String
+	 * password = user.getPassword(); User existingUser =
+	 * userService.findByUsername(username); if(existingUser!=null &&
+	 * passwordEncoder.matches(password, existingUser.getPassword())) {
+	 * session.setAttribute("username", username); return
+	 * ResponseEntity.ok(existingUser); }else { return
+	 * ResponseEntity.badRequest().body("Invalid credentials"); }
+	 * 
+	 * }
+	 */
+	/*
+	 * @PostMapping("/login") public ResponseEntity<Object> login(@RequestBody User
+	 * user, HttpSession session) { String username = user.getUsername(); String
+	 * password = user.getPassword(); User existingUser =
+	 * userService.findByUsername(username);
+	 * 
+	 * if (existingUser != null && passwordEncoder.matches(password,
+	 * existingUser.getPassword())) { // Create SpringSecurityUser object
+	 * SpringSecurityUser springSecurityUser = new SpringSecurityUser(
+	 * existingUser.getUsername(), existingUser.getPassword(),
+	 * existingUser.getRole().getAuthority() );
+	 * 
+	 * // Store in the session session.setAttribute("username", springSecurityUser);
+	 * 
+	 * return ResponseEntity.ok(existingUser); } else { return
+	 * ResponseEntity.badRequest().body("Invalid credentials"); } }
+	 * 
+	 */
 }

@@ -27,6 +27,7 @@ import com.example.HospitalManagementSystem.repository.ReceptionistRepository;
 import com.example.HospitalManagementSystem.repository.RoleRepository;
 import com.example.HospitalManagementSystem.repository.UserDetailsRepository;
 import com.example.HospitalManagementSystem.repository.UserRepository;
+import com.example.HospitalManagementSystem.util.JWTUtil;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -147,10 +148,10 @@ public class ReceptionistService {
     }
     
    
-    public User registerPatientForReceptionist(SignUpDto signUpDto) {
+    public User registerPatientForReceptionist(SignUpDto signUpDto,String token) {
         
         
-        String username = (String) session.getAttribute("username");
+    	 String username = JWTUtil.getUsername(token);
 
        
         if (username == null) {
