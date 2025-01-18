@@ -20,11 +20,31 @@ public class PatientVitals {
     @ManyToOne
     @JoinColumn(name = "patient_id")
     private Patient patient;
+    
+    @ManyToOne  // **Added relationship to Nurse**
+    @JoinColumn(name = "nurse_id") // **Nurse ID column**
+    private Nurse nurse;
+    
+    @ManyToOne  // **Added relationship to Doctor**
+    @JoinColumn(name = "doctor_id") // **Doctor ID column**
+    private Doctor doctor; // **Field for Doctor reference**
+
 
     public PatientVitals() {
 		// TODO Auto-generated constructor stub
 	}
-
+    
+    public PatientVitals(Double temperature, Double weight, String bloodPressure, Integer heartRate, Patient patient) {
+		this.temperature = temperature;
+		this.weight = weight;
+		this.bloodPressure = bloodPressure;
+		this.heartRate = heartRate;
+		this.patient = patient;
+		this.nurse = nurse; // **Initialize the nurse**
+        this.doctor = doctor; // **Initialize the doctor**
+		this.date = new Date(System.currentTimeMillis());
+	}
+    
 	public int getId() {
 		return id;
 	}
@@ -73,15 +93,14 @@ public class PatientVitals {
 		this.patient = patient;
 	}
 
-	public PatientVitals(Double temperature, Double weight, String bloodPressure, Integer heartRate, Patient patient) {
-		this.temperature = temperature;
-		this.weight = weight;
-		this.bloodPressure = bloodPressure;
-		this.heartRate = heartRate;
-		this.patient = patient;
-		this.date = new Date(System.currentTimeMillis());
-	}
+	    public Doctor getDoctor() { // **Getter for Doctor**
+	        return doctor;  
+	    }
 
+	    public void setDoctor(Doctor doctor) { // **Setter for Doctor**
+	        this.doctor = doctor;  
+	    }
+	    
 	public Date getDate() {
 		return date;
 	}
@@ -90,4 +109,3 @@ public class PatientVitals {
 		this.date = date;
 	}
 }
-
