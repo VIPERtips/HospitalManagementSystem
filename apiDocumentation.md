@@ -403,4 +403,46 @@ Allows the nurse to record the patient's vitals.
 
 ---
 
+
+
+### 3. **Refresh Token**
+- **URL**: `/refresh-token`
+- **Method**: `POST`
+- **Description**: Refreshes the access token if the token is expired. The expired token must be provided in the `Authorization` header.
+- **Request Header**:
+  - `Authorization: Bearer JWT_TOKEN_HERE`
+- **Response**:
+  - **Status**: `200 OK`
+  - **Body**:
+    ```json
+    {
+      "Authorization": "Bearer REFRESHED_JWT_TOKEN"
+    }
+    ```
+
+  - **Status**: `403 Forbidden`
+  - **Body**:
+    ```json
+    {
+      "message": "Token is still valid"
+    }
+    ```
+
+---
+
+### 4. **Logout**
+- **URL**: `/logout`
+- **Method**: `POST`
+- **Description**: Logs out the user by invalidating the access token and clearing it from storage.
+- **Request Header**:
+  - `Authorization: Bearer JWT_TOKEN_HERE`
+- **Response**:
+  - **Status**: `200 OK`
+  - **Body**:
+    ```json
+    {
+      "message": "Logout successful!"
+    }
+    ```
+
 **END OF DOCUMENTATION**

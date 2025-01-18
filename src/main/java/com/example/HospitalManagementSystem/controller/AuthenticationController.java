@@ -1,6 +1,8 @@
 package com.example.HospitalManagementSystem.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -49,7 +51,7 @@ public class AuthenticationController {
 	}
 
 	@PostMapping("/login")
-	public ResponseEntity<Object> login(@RequestBody User user,HttpSession session) {
+	public ResponseEntity<Object> login(@RequestBody User user, HttpSession session) {
 		String username = user.getUsername();
 		String password = user.getPassword();
 		User existingUser = userService.findByUsername(username);
@@ -66,43 +68,44 @@ public class AuthenticationController {
 
 	@PostMapping("/refresh-token")
 	public ResponseEntity<Object> refreshToken(HttpServletRequest request) {
-		String token = request.getHeader("Authorization");
+	    String refreshToken = request.getHeader("Authorization");
 
-		if (token != null && JWTUtil.isTokenExpired(token)) {
-			String refreshedToken = JWTUtil.generateToken(JWTUtil.getUsername(token));
-			return ResponseEntity.ok().header("Authorization", "Bearer " + refreshedToken).build();
-		}
-		return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Token is still valid");
+	    if (refreshToken != null && refreshToken.startsWith("Bearer ")) {
+	        refreshToken = refreshToken.substring(7); 
+
+	        try {
+	            
+	            if (JWTUtil.isTokenExpired(refreshToken)) {
+	                String username = JWTUtil.getUsername(refreshToken);
+
+	                
+	                String newAccessToken = JWTUtil.generateToken(username);
+
+	                Map<String, String> tokens = new HashMap<>();
+	                tokens.put("accessToken", newAccessToken);
+	                tokens.put("refreshToken", refreshToken);
+
+	                return ResponseEntity.ok(tokens);
+	            } else {
+	                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Invalid refresh token.");
+	            }
+	        } catch (Exception e) {
+	            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("Error processing refresh token.");
+	        }
+	    }
+
+	    return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Refresh token is missing.");
 	}
 
-	/*
-	 * @PostMapping("/login") public ResponseEntity<Object> login(@RequestBody User
-	 * user,HttpSession session){ String username = user.getUsername(); String
-	 * password = user.getPassword(); User existingUser =
-	 * userService.findByUsername(username); if(existingUser!=null &&
-	 * passwordEncoder.matches(password, existingUser.getPassword())) {
-	 * session.setAttribute("username", username); return
-	 * ResponseEntity.ok(existingUser); }else { return
-	 * ResponseEntity.badRequest().body("Invalid credentials"); }
-	 * 
-	 * }
-	 */
-	/*
-	 * @PostMapping("/login") public ResponseEntity<Object> login(@RequestBody User
-	 * user, HttpSession session) { String username = user.getUsername(); String
-	 * password = user.getPassword(); User existingUser =
-	 * userService.findByUsername(username);
-	 * 
-	 * if (existingUser != null && passwordEncoder.matches(password,
-	 * existingUser.getPassword())) { // Create SpringSecurityUser object
-	 * SpringSecurityUser springSecurityUser = new SpringSecurityUser(
-	 * existingUser.getUsername(), existingUser.getPassword(),
-	 * existingUser.getRole().getAuthority() );
-	 * 
-	 * // Store in the session session.setAttribute("username", springSecurityUser);
-	 * 
-	 * return ResponseEntity.ok(existingUser); } else { return
-	 * ResponseEntity.badRequest().body("Invalid credentials"); } }
-	 * 
-	 */
+
+	@PostMapping("/logout")
+	public ResponseEntity<String> logout(HttpSession session) {
+		try {
+			session.invalidate(); 
+			return ResponseEntity.ok("Logout successful.");
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+					.body("Error during logout: " + e.getMessage());
+		}
+	}
 }

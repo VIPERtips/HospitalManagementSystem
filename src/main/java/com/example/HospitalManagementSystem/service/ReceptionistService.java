@@ -69,22 +69,22 @@ public class ReceptionistService {
     public User createReceptionist(SignUpDto signUpDto) {
         Role receptionistRole = roleRepository.findByRole("RECEPTIONIST");
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
-            // Create user
+           
             User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null,
                     receptionistRole,null);
             user = userRepository.save(user);
 
-            // Create userDetails
+            
             UserDetails userDetails = new UserDetails(signUpDto.getFirstname(), signUpDto.getLastname(),
                     signUpDto.getEmail(), signUpDto.getAddress(), signUpDto.getContact(), signUpDto.getDateOfBirth(),
                     signUpDto.getGender(), user);
             userDetailsRepository.save(userDetails);
             user.setUserDetails(userDetails);
 
-            // Save user again to link userDetails
+           
             userRepository.save(user);
             
-            // Create and link Receptionist to UserDetails
+           
             Receptionist receptionist = new Receptionist(); 
             receptionist.setUserDetails(userDetails);
             receptionistRepository.save(receptionist); 
