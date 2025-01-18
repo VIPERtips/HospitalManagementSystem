@@ -20,38 +20,39 @@ public class JWTAuthorizationFilter extends OncePerRequestFilter {
 
     private final CustomUserDetailsService customUserDetailsService;
 
-    
     public JWTAuthorizationFilter(CustomUserDetailsService customUserDetailsService) {
         this.customUserDetailsService = customUserDetailsService;
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-            throws ServletException, IOException {
-
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String token = request.getHeader("Authorization");
 
-        if (token != null && token.startsWith("Bearer ")) {
-            token = token.substring(7); 
-
-            String username = JWTUtil.getUsername(token);
-
-            if (username != null && !JWTUtil.isTokenExpired(token)) {
-                
-                User user = (User) customUserDetailsService.loadUserByUsername(username);
-
-                
-                ArrayList<GrantedAuthority> authorities = new ArrayList<>(user.getAuthorities()); 
-
-                
-                UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        user, null, authorities
-                );
-
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+        if (token == null || !token.startsWith("Bearer ")) {
+            System.out.println("Invalid token format or missing token");
+            filterChain.doFilter(request, response);
+            return; // Return if token is missing or in an invalid format
         }
 
-        filterChain.doFilter(request, response); 
+        token = token.substring(7); // Remove "Bearer " prefix
+
+        try {
+            // Validate and extract claims from the token
+            if (token != null && !token.isEmpty()) {
+                String username = JWTUtil.getUsername(token);
+                if (username != null && JWTUtil.validateToken(token, username)) {
+                    // Proceed with authentication if valid
+                    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                } else {
+                    System.out.println("Invalid token or expired");
+                }
+            }
+        } catch (Exception e) {
+            // Handle invalid token scenario
+            System.out.println("Error while processing token: " + e.getMessage());
+        }
+
+        filterChain.doFilter(request, response);
     }
 }

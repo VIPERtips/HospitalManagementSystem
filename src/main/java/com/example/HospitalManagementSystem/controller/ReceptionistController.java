@@ -71,15 +71,12 @@ public class ReceptionistController {
     @PostMapping("/patients/register")
     public ResponseEntity<String> registerPatient(@RequestBody SignUpDto signUpDto, @RequestHeader("Authorization") String authorizationHeader) {
         try {
-            
             String token = authorizationHeader.startsWith("Bearer ") ? authorizationHeader.substring(7) : null;
 
-            
             if (token == null) {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Error: Missing or invalid token");
             }
 
-            
             receptionistService.registerPatientForReceptionist(signUpDto, token);
 
             return ResponseEntity.ok("Patient registration successful!");
@@ -87,6 +84,11 @@ public class ReceptionistController {
             return ResponseEntity.badRequest().body("Error: " + e.getMessage());
         }
     }
+    @GetMapping("/patients/register")
+    public ResponseEntity<String> getPatientRegistrationInfo() {
+        return ResponseEntity.ok("This is a registration endpoint.");
+    }
+
 
     @GetMapping("/patients/{id}")
     public ResponseEntity<Patient> getPatientById(@PathVariable int id) {

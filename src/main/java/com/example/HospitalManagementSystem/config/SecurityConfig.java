@@ -38,6 +38,8 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/login", "/api/sign-up", "/api/roles/**", "/api/receptionists/**", 
                                  "/api/nurses/**", "/api/**", "/api/patients/**").permitAll()
+                .requestMatchers("/api/receptionists/patients/register").hasRole("RECEPTIONIST")
+
                 .anyRequest().authenticated()
             )
             .formLogin().disable()

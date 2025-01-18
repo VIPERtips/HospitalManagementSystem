@@ -148,30 +148,37 @@ public class ReceptionistService {
     }
     
    
-    public User registerPatientForReceptionist(SignUpDto signUpDto,String token) {
-        
-        
-    	 String username = JWTUtil.getUsername(token);
+    public User registerPatientForReceptionist(SignUpDto signUpDto, String token) {
+        String username = JWTUtil.getUsername(token);
 
-       
+        // Token verification and username extraction
         if (username == null) {
             throw new RuntimeException("No authenticated user found!");
         }
 
         User receptionist = userRepository.findByUsername(username);
-        Role patientRole = roleRepository.findByRole("Patient");
+        if (receptionist == null) {
+            throw new RuntimeException("Receptionist not found with the provided username.");
+        }
 
-       
+        // Get the "Patient" role
+        Role patientRole = roleRepository.findByRole("Patient");
+        if (patientRole == null) {
+            throw new RuntimeException("Role 'Patient' does not exist.");
+        }
+
+        // Check if the email already exists
         if (userRepository.existsByUsername(signUpDto.getEmail())) {
             throw new RuntimeException("Email already exists. Please use a different email address.");
         }
 
+        // Check if the passwords match
         if (signUpDto.getPassword().equals(signUpDto.getConfirmPassword())) {
-           
-            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole,null);
+            // Create and save the new user
+            User user = new User(signUpDto.getEmail(), passwordEncoder.encode(signUpDto.getPassword()), null, patientRole, null);
             user = userRepository.save(user);
 
-            
+            // Create and save user details
             UserDetails userDetails = new UserDetails(
                 signUpDto.getFirstname(),
                 signUpDto.getLastname(),
@@ -182,17 +189,13 @@ public class ReceptionistService {
                 signUpDto.getGender(),
                 user
             );
-
-            
             userDetails = userDetailsRepository.save(userDetails);
 
-            
-            Patient patient = new Patient(userDetails,receptionist);
-
-            
+            // Create and save patient
+            Patient patient = new Patient(userDetails, receptionist);
             patientRepository.save(patient);
 
-           
+            // Update user with user details
             user.setUserDetails(userDetails);
             userRepository.save(user);
 
@@ -209,8 +212,6 @@ public class ReceptionistService {
             throw new RuntimeException("Sign up failed: Passwords do not match!");
         }
     }
-    
-   
 
     
     public Patient findPatientById(int id) {
