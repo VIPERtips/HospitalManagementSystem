@@ -10,33 +10,46 @@ import jakarta.persistence.Column;
 
 @Entity
 public class Diagnosis {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+	 @Id
+	    @GeneratedValue(strategy = GenerationType.IDENTITY)
+	    private int id;
 
-    @Column(nullable = false)
-    private String diagnosisDetails;
+	    @Column(nullable = false)
+	    private String diagnosisDetails;
 
-    @Column(nullable = false)
-    private String prescription;
+	    @Column(nullable = false)
+	    private String prescription;
 
-    @ManyToOne
-    @JoinColumn(name = "patient_id", nullable = false)
-    private Patient patient;
+	    @Column(nullable = false)
+	    private int prescriptionDuration; 
 
-    @ManyToOne
-    @JoinColumn(name = "doctor_id", nullable = false)
-    private Doctor doctor;
+	    public int getPrescriptionDuration() {
+			return prescriptionDuration;
+		}
+
+		public void setPrescriptionDuration(int prescriptionDuration) {
+			this.prescriptionDuration = prescriptionDuration;
+		}
+
+		@ManyToOne
+	    @JoinColumn(name = "patient_id", nullable = false)
+	    private Patient patient;
+
+	    @ManyToOne
+	    @JoinColumn(name = "doctor_id", nullable = false)
+	    private Doctor doctor;
+
 
     public Diagnosis() {
         // Default constructor
     }
 
-    public Diagnosis(String diagnosisDetails, String prescription, Patient patient, Doctor doctor) {
+    public Diagnosis(String diagnosisDetails, String prescription, Patient patient, Doctor doctor,int prescriptionDuration) {
         this.diagnosisDetails = diagnosisDetails;
         this.prescription = prescription;
         this.patient = patient;
         this.doctor = doctor;
+        this.prescriptionDuration = prescriptionDuration;
     }
 
     public int getId() {

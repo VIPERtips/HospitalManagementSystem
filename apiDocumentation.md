@@ -342,14 +342,7 @@ Retrieves the list of patients assigned to the currently logged-in nurse.
 - `patientId` (Path Variable): ID of the patient.
 
 **Request Body (JSON):**
-```json
-{
-    "temperature": 37.5,
-    "weight": 70.5,
-    "bloodPressure": "120/80",
-    "heartRate": 75
-}
-```
+
 
 **Response:**
 - **200 OK**: Vitals recorded successfully.
@@ -369,14 +362,6 @@ Retrieves the list of patients assigned to the currently logged-in nurse.
 - `vitalsId` (Path Variable): ID of the vitals record to update.
 
 **Request Body (JSON):**
-```json
-{
-    "temperature": 38.0,
-    "weight": 72.0,
-    "bloodPressure": "130/85",
-    "heartRate": 80
-}
-```
 
 **Response:**
 - **200 OK**: Vitals updated successfully.
@@ -475,6 +460,74 @@ Retrieves the list of patients assigned to the currently logged-in nurse.
 ---
 
 
+## 1. Create Diagnosis
+**Method**: `POST`  
+**URL**: `/api/doctors/patients/{patientId}/diagnoses`
+
+### Path Variables:
+- `patientId`: Replace with the actual patient ID.
+
+### Query Parameter:
+- `doctorId`: The ID of the doctor creating the diagnosis.
+
+### Request Body (JSON):
+
+### Expected Response:
+- **200 OK**: Returns the created diagnosis.
+
+- **400 Bad Request**: If an error occurs.
+
+---
+
+## 2. Update Diagnosis
+**Method**: `PUT`  
+**URL**: `/api/doctors/diagnoses/{diagnosisId}`
+
+### Path Variables:
+- `diagnosisId`: Replace with the actual diagnosis ID.
+
+### Request Body (JSON):
+
+
+### Expected Response:
+- **200 OK**: Returns the updated diagnosis.
+- **400 Bad Request**: If an error occurs.
+
+---
+
+## 3. Delete Diagnosis
+**Method**: `DELETE`  
+**URL**: `/api/doctors/diagnoses/{diagnosisId}`
+
+### Path Variables:
+- `diagnosisId`: Replace with the ID of the diagnosis to delete.
+
+### Expected Response:
+- **200 OK**: Success message.
+
+- **400 Bad Request**: If an error occurs.
+
+---
+
+## 4. Send Prescription to Receptionist
+**Method**: `POST`  
+**URL**: `/api/doctors/patients/{patientId}/prescriptions`
+
+### Path Variables:
+- `patientId`: Replace with the actual patient ID.
+
+### Query Parameter:
+- `receptionistId`: The ID of the receptionist.
+
+### Request Body (JSON):
+
+
+### Expected Response:
+- **200 OK**: Returns the created prescription.
+
+- **400 Bad Request**: If an error occurs.
+---
+
 
 ### 3. **Refresh Token**
 - **URL**: `/refresh-token`
@@ -484,20 +537,11 @@ Retrieves the list of patients assigned to the currently logged-in nurse.
   - `Authorization: Bearer JWT_TOKEN_HERE`
 - **Response**:
   - **Status**: `200 OK`
-  - **Body**:
-    ```json
-    {
-      "Authorization": "Bearer REFRESHED_JWT_TOKEN"
-    }
-    ```
+  
 
   - **Status**: `403 Forbidden`
   - **Body**:
-    ```json
-    {
-      "message": "Token is still valid"
-    }
-    ```
+   
 
 ---
 
@@ -510,10 +554,7 @@ Retrieves the list of patients assigned to the currently logged-in nurse.
 - **Response**:
   - **Status**: `200 OK`
   - **Body**:
-    ```json
-    {
-      "message": "Logout successful!"
-    }
-    ```
+    
+
 
 **END OF DOCUMENTATION**
