@@ -16,6 +16,25 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 
 public class SecurityConfig {
+	@Bean
+	public SecurityFilterChain securitsyFilterChain(HttpSecurity http) throws Exception {
+		return http
+				.csrf().disable()
+				.authorizeHttpRequests(auth-> auth
+						.requestMatchers("/api/login","/api/sign-up","/api/roles/**","/api/receptionists/**", "/api/nurses/**","/api/**","/api/patients/**","/api/doctors/**","/api/vital-signs/**").permitAll()
+						//.requestMatchers("/api/nurses/**").hasAnyAuthority("NURSE","ADMIN")
+						//.requestMatchers("/api/doctors/**","/api/patients/**","/api/appointments").hasAuthority("ADMIN"),"/api/nurses/"
+						.anyRequest().authenticated()
+						
+						)
+				.formLogin().disable()
+				.build();
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
+	}
 
     private final CustomUserDetailsService customUserDetailsService;
 
@@ -51,8 +70,4 @@ public class SecurityConfig {
         return http.build();
     }
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
 }
